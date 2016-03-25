@@ -40,7 +40,7 @@ class ViewController: UIViewController {
             button.contentView.ring3EndColor = progressGroup.ring3EndColor
             containerView.addSubview(button)
             buttons.append(button)
-            button.addTarget(self, action: "buttonTapped:", forControlEvents: .TouchUpInside)
+            button.addTarget(self, action: #selector(ViewController.buttonTapped(_:)), forControlEvents: .TouchUpInside)
         }
         
         buttons[0].selected = true

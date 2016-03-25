@@ -58,8 +58,13 @@ public class MKGradientGenerator {
         return img
     }
     
-    private class func pixelDataForGradient(gradientType: GradientType, var colors: [[CGColorRef]?], var locations: [[Float]?], var startPoints: [CGPoint?], var endPoints: [CGPoint?], point: CGPoint, size: CGSize) -> RGBA {
+    private class func pixelDataForGradient(gradientType: GradientType, colors: [[CGColorRef]?], locations: [[Float]?], startPoints: [CGPoint?], endPoints: [CGPoint?], point: CGPoint, size: CGSize) -> RGBA {
         assert(colors.count > 0)
+        
+        var colors = colors
+        var locations = locations
+        var startPoints = startPoints
+        var endPoints = endPoints
         
         if gradientType == .Bilinear && colors.count == 1 {
             colors.append([UIColor.clearColor().CGColor])
