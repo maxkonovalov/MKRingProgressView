@@ -27,11 +27,11 @@ import UIKit
 // MARK: - Ring Progress View
 
 @IBDesignable
-class MKRingProgressView: UIView {
+public class MKRingProgressView: UIView {
     
     /* The ring color for lowest progress values (closer to 0.0). */
     
-    @IBInspectable var startColor: UIColor {
+    @IBInspectable public var startColor: UIColor {
         get {
             return UIColor(CGColor: (layer as! MKRingProgressLayer).startColor)
         }
@@ -42,7 +42,7 @@ class MKRingProgressView: UIView {
     
     /* The ring color for highest progress values (closer to 1.0) */
     
-    @IBInspectable var endColor: UIColor {
+    @IBInspectable public var endColor: UIColor {
         get {
             return UIColor(CGColor: (layer as! MKRingProgressLayer).endColor)
         }
@@ -54,7 +54,7 @@ class MKRingProgressView: UIView {
     /* The color of backdrop circle, visible at progress values between 0.0 and 1.0.
     * If not specified, `startColor` with 15% opacity will be used. */
     
-    @IBInspectable var backgroundRingColor: UIColor? {
+    @IBInspectable public var backgroundRingColor: UIColor? {
         get {
             if let color = (layer as! MKRingProgressLayer).backgroundRingColor {
                 return UIColor(CGColor: color)
@@ -68,7 +68,7 @@ class MKRingProgressView: UIView {
     
     /* The width of the progress ring. Defaults to 20. */
     
-    @IBInspectable var ringWidth: CGFloat {
+    @IBInspectable public var ringWidth: CGFloat {
         get {
             return (layer as! MKRingProgressLayer).ringWidth
         }
@@ -80,7 +80,7 @@ class MKRingProgressView: UIView {
     /* The opacity of the shadow below progress line end. Defaults to 1.
     * Values outside the [0,1] range will be clamped. */
 
-    @IBInspectable var shadowOpacity: CGFloat {
+    @IBInspectable public var shadowOpacity: CGFloat {
         get {
             return (layer as! MKRingProgressLayer).endShadowOpacity
         }
@@ -93,7 +93,7 @@ class MKRingProgressView: UIView {
     * one full revolution, i.e. 1.0 -> 360°, 2.0 -> 720°, etc. Defaults to 0.
     * Progress animation duration can be adjusted using `CATransaction.setAnimationDuration()` */
     
-    var progress: Double {
+    public var progress: Double {
         get {
             return Double((layer as! MKRingProgressLayer).progress)
         }
@@ -102,7 +102,7 @@ class MKRingProgressView: UIView {
         }
     }
     
-    override class func layerClass() -> AnyClass {
+    public override class func layerClass() -> AnyClass {
         return MKRingProgressLayer.self
     }
     
@@ -111,33 +111,33 @@ class MKRingProgressView: UIView {
 
 // MARK: Ring Progress Layer
 
-class MKRingProgressLayer: CALayer {
+public class MKRingProgressLayer: CALayer {
     
-    var startColor = UIColor.redColor().CGColor {
+    public var startColor = UIColor.redColor().CGColor {
         didSet {
             setNeedsRedrawContents()
         }
     }
     
-    var endColor = UIColor.blueColor().CGColor {
+    public var endColor = UIColor.blueColor().CGColor {
         didSet {
             setNeedsRedrawContents()
         }
     }
     
-    var backgroundRingColor: CGColorRef? = nil {
+    public var backgroundRingColor: CGColorRef? = nil {
         didSet {
             setNeedsDisplay()
         }
     }
     
-    var ringWidth: CGFloat = 20 {
+    public var ringWidth: CGFloat = 20 {
         didSet {
             setNeedsRedrawContents()
         }
     }
     
-    var endShadowOpacity: CGFloat = 1.0 {
+    public var endShadowOpacity: CGFloat = 1.0 {
         didSet {
             endShadowOpacity = min(max(endShadowOpacity, 0), 1)
             setNeedsDisplay()
@@ -147,14 +147,14 @@ class MKRingProgressLayer: CALayer {
     
     @NSManaged var progress: CGFloat
     
-    override static func needsDisplayForKey(key: String) -> Bool {
+    override public static func needsDisplayForKey(key: String) -> Bool {
         if key == "progress" {
             return true
         }
         return super.needsDisplayForKey(key)
     }
     
-    override func actionForKey(event: String) -> CAAction? {
+    override public func actionForKey(event: String) -> CAAction? {
         if event == "progress" {
             let animation = CABasicAnimation(keyPath: event)
             animation.timingFunction = CAMediaTimingFunction(controlPoints: 0.2, 0.0, 0.1, 1.0)
@@ -176,7 +176,7 @@ class MKRingProgressLayer: CALayer {
         setup()
     }
 
-    required init?(coder aDecoder: NSCoder) {
+    required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         setup()
     }
@@ -191,7 +191,7 @@ class MKRingProgressLayer: CALayer {
         setNeedsDisplay()
     }
     
-    override func display() {
+    override public func display() {
         self.contents = contentImage()
     }
     
