@@ -89,6 +89,17 @@ public class MKRingProgressView: UIView {
         }
     }
     
+    /* The Antialiasing switch. Defaults to false. */
+    
+    @IBInspectable public var allowsAntialiasing: Bool {
+        get {
+            return (layer as! MKRingProgressLayer).allowsAntialiasing
+        }
+        set {
+            (layer as! MKRingProgressLayer).allowsAntialiasing = newValue
+        }
+    }
+    
     /* The progress. Can be any nonnegative number, every whole number corresponding to 
     * one full revolution, i.e. 1.0 -> 360°, 2.0 -> 720°, etc. Defaults to 0.
     * Progress animation duration can be adjusted using `CATransaction.setAnimationDuration()` */
@@ -144,6 +155,11 @@ public class MKRingProgressLayer: CALayer {
         }
     }
     
+    public var allowsAntialiasing: Bool = false {
+        didSet {
+            setNeedsDisplay()
+        }
+    }
     
     @NSManaged var progress: CGFloat
     
@@ -211,6 +227,8 @@ public class MKRingProgressLayer: CALayer {
         UIGraphicsBeginImageContextWithOptions(bounds.size, false, 0)
         let ctx = UIGraphicsGetCurrentContext()!
         
+        CGContextSetShouldAntialias(ctx, allowsAntialiasing)
+        CGContextSetAllowsAntialiasing(ctx, allowsAntialiasing)
         
         let w: CGFloat = ringWidth
         let r = min(bounds.width, bounds.height)/2 - w/2

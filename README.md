@@ -42,6 +42,7 @@ ringProgressView.startColor = UIColor.redColor()
 ringProgressView.endColor = UIColor.magentaColor()
 ringProgressView.ringWidth = 25
 ringProgressView.progress = 0.0
+ringProgressView.allowsAntialiasing = true
 view.addSubview(ringProgressView)
 ```
 
