@@ -89,7 +89,7 @@ public class MKRingProgressView: UIView {
         }
     }
     
-    /* The Antialiasing switch. Defaults to false. */
+    /* The Antialiasing switch. Defaults to true. */
     
     @IBInspectable public var allowsAntialiasing: Bool {
         get {
@@ -155,7 +155,7 @@ public class MKRingProgressLayer: CALayer {
         }
     }
     
-    public var allowsAntialiasing: Bool = false {
+    public var allowsAntialiasing: Bool = true {
         didSet {
             setNeedsDisplay()
         }
