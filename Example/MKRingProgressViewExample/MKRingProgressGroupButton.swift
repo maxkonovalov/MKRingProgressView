@@ -48,17 +48,17 @@ class MKRingProgressGroupButton: UIButton {
     
     private func setup() {
         
-        selectionIndicatorView.userInteractionEnabled = false
-        selectionIndicatorView.backgroundColor = UIColor.clearColor()
+        selectionIndicatorView.isUserInteractionEnabled = false
+        selectionIndicatorView.backgroundColor = .clear
         selectionIndicatorView.layer.masksToBounds = false
-        selectionIndicatorView.layer.shadowColor = UIColor.whiteColor().CGColor
+        selectionIndicatorView.layer.shadowColor = UIColor.white.cgColor
         selectionIndicatorView.layer.shadowOpacity = 1.0
         selectionIndicatorView.layer.shadowRadius = 1.0
         selectionIndicatorView.layer.shadowOffset = CGSize(width: 0, height: 0)
         addSubview(selectionIndicatorView)
-        selectionIndicatorView.hidden = true
+        selectionIndicatorView.isHidden = true
         
-        contentView.userInteractionEnabled = false
+        contentView.isUserInteractionEnabled = false
         addSubview(contentView)
         
     }
@@ -68,18 +68,18 @@ class MKRingProgressGroupButton: UIButton {
         let size = min(bounds.width, bounds.height) - contentMargin * 2
         contentView.frame = CGRect(x: (bounds.width - size)/2, y: (bounds.height - size)/2, width: size, height: size)
         selectionIndicatorView.frame = contentView.frame
-        selectionIndicatorView.layer.shadowPath = CGPathCreateCopyByStrokingPath(UIBezierPath(ovalInRect: selectionIndicatorView.bounds.insetBy(dx: -1, dy: -1)).CGPath, nil, 1.0, .Round, .Round, 0)
+        selectionIndicatorView.layer.shadowPath = CGPath(__byStroking: UIBezierPath(ovalIn: selectionIndicatorView.bounds.insetBy(dx: -1, dy: -1)).cgPath, transform: nil, lineWidth: 1.0, lineCap: .round, lineJoin: .round, miterLimit: 0)
     }
 
-    override var highlighted: Bool {
+    override var isHighlighted: Bool {
         didSet {
-            contentView.alpha = highlighted ? 0.3 : 1.0
+            contentView.alpha = isHighlighted ? 0.3 : 1.0
         }
     }
     
-    override var selected: Bool {
+    override var isSelected: Bool {
         didSet {
-            selectionIndicatorView.hidden = !selected
+            selectionIndicatorView.isHidden = !isSelected
         }
     }
 }

@@ -31,37 +31,37 @@ class MKRingProgressGroupView: UIView {
     let ring2 = MKRingProgressView()
     let ring3 = MKRingProgressView()
     
-    @IBInspectable var ring1StartColor: UIColor = UIColor.redColor() {
+    @IBInspectable var ring1StartColor: UIColor = .red {
         didSet {
             ring1.startColor = ring1StartColor
         }
     }
     
-    @IBInspectable var ring1EndColor: UIColor = UIColor.blueColor() {
+    @IBInspectable var ring1EndColor: UIColor = .blue {
         didSet {
             ring1.endColor = ring1EndColor
         }
     }
     
-    @IBInspectable var ring2StartColor: UIColor = UIColor.redColor() {
+    @IBInspectable var ring2StartColor: UIColor = .red {
         didSet {
             ring2.startColor = ring2StartColor
         }
     }
     
-    @IBInspectable var ring2EndColor: UIColor = UIColor.blueColor() {
+    @IBInspectable var ring2EndColor: UIColor = .blue {
         didSet {
             ring2.endColor = ring2EndColor
         }
     }
     
-    @IBInspectable var ring3StartColor: UIColor = UIColor.redColor() {
+    @IBInspectable var ring3StartColor: UIColor = .red {
         didSet {
             ring3.startColor = ring3StartColor
         }
     }
     
-    @IBInspectable var ring3EndColor: UIColor = UIColor.blueColor() {
+    @IBInspectable var ring3EndColor: UIColor = .blue {
         didSet {
             ring3.endColor = ring3EndColor
         }

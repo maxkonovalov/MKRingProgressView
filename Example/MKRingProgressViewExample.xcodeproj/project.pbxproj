@@ -12,10 +12,10 @@
 		508CBF801BD6C2C7008A3B4E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 508CBF7E1BD6C2C7008A3B4E /* Main.storyboard */; };
 		508CBF821BD6C2C7008A3B4E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 508CBF811BD6C2C7008A3B4E /* Assets.xcassets */; };
 		508CBF851BD6C2C7008A3B4E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 508CBF831BD6C2C7008A3B4E /* LaunchScreen.storyboard */; };
-		508CBF8F1BD6C31D008A3B4E /* MKGradientGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 508CBF8D1BD6C31D008A3B4E /* MKGradientGenerator.swift */; settings = {ASSET_TAGS = (); }; };
-		508CBF901BD6C31D008A3B4E /* MKRingProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 508CBF8E1BD6C31D008A3B4E /* MKRingProgressView.swift */; settings = {ASSET_TAGS = (); }; };
-		508CBF921BD6CA0C008A3B4E /* MKRingProgressGroupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 508CBF911BD6CA0C008A3B4E /* MKRingProgressGroupView.swift */; settings = {ASSET_TAGS = (); }; };
-		508CBF951BD6DBC2008A3B4E /* MKRingProgressGroupButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 508CBF941BD6DBC2008A3B4E /* MKRingProgressGroupButton.swift */; settings = {ASSET_TAGS = (); }; };
+		508CBF8F1BD6C31D008A3B4E /* MKGradientGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 508CBF8D1BD6C31D008A3B4E /* MKGradientGenerator.swift */; };
+		508CBF901BD6C31D008A3B4E /* MKRingProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 508CBF8E1BD6C31D008A3B4E /* MKRingProgressView.swift */; };
+		508CBF921BD6CA0C008A3B4E /* MKRingProgressGroupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 508CBF911BD6CA0C008A3B4E /* MKRingProgressGroupView.swift */; };
+		508CBF951BD6DBC2008A3B4E /* MKRingProgressGroupButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 508CBF941BD6DBC2008A3B4E /* MKRingProgressGroupButton.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -124,6 +124,8 @@
 				TargetAttributes = {
 					508CBF761BD6C2C7008A3B4E = {
 						CreatedOnToolsVersion = 7.0.1;
+						LastSwiftMigration = 0800;
+						ProvisioningStyle = Automatic;
 					};
 				};
 			};
@@ -287,6 +289,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.maxkonovalov.MKRingProgressViewExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -300,6 +303,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.maxkonovalov.MKRingProgressViewExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};

@@ -27,48 +27,48 @@ import UIKit
 // MARK: - Ring Progress View
 
 @IBDesignable
-public class MKRingProgressView: UIView {
+open class MKRingProgressView: UIView {
     
     /* The ring color for lowest progress values (closer to 0.0). */
     
-    @IBInspectable public var startColor: UIColor {
+    @IBInspectable open var startColor: UIColor {
         get {
-            return UIColor(CGColor: (layer as! MKRingProgressLayer).startColor)
+            return UIColor(cgColor: (layer as! MKRingProgressLayer).startColor)
         }
         set {
-            (layer as! MKRingProgressLayer).startColor = newValue.CGColor
+            (layer as! MKRingProgressLayer).startColor = newValue.cgColor
         }
     }
     
     /* The ring color for highest progress values (closer to 1.0) */
     
-    @IBInspectable public var endColor: UIColor {
+    @IBInspectable open var endColor: UIColor {
         get {
-            return UIColor(CGColor: (layer as! MKRingProgressLayer).endColor)
+            return UIColor(cgColor: (layer as! MKRingProgressLayer).endColor)
         }
         set {
-            (layer as! MKRingProgressLayer).endColor = newValue.CGColor
+            (layer as! MKRingProgressLayer).endColor = newValue.cgColor
         }
     }
     
     /* The color of backdrop circle, visible at progress values between 0.0 and 1.0.
     * If not specified, `startColor` with 15% opacity will be used. */
     
-    @IBInspectable public var backgroundRingColor: UIColor? {
+    @IBInspectable open var backgroundRingColor: UIColor? {
         get {
             if let color = (layer as! MKRingProgressLayer).backgroundRingColor {
-                return UIColor(CGColor: color)
+                return UIColor(cgColor: color)
             }
             return nil
         }
         set {
-            (layer as! MKRingProgressLayer).backgroundRingColor = newValue?.CGColor
+            (layer as! MKRingProgressLayer).backgroundRingColor = newValue?.cgColor
         }
     }
     
     /* The width of the progress ring. Defaults to 20. */
     
-    @IBInspectable public var ringWidth: CGFloat {
+    @IBInspectable open var ringWidth: CGFloat {
         get {
             return (layer as! MKRingProgressLayer).ringWidth
         }
@@ -80,7 +80,7 @@ public class MKRingProgressView: UIView {
     /* The opacity of the shadow below progress line end. Defaults to 1.
     * Values outside the [0,1] range will be clamped. */
 
-    @IBInspectable public var shadowOpacity: CGFloat {
+    @IBInspectable open var shadowOpacity: CGFloat {
         get {
             return (layer as! MKRingProgressLayer).endShadowOpacity
         }
@@ -91,7 +91,7 @@ public class MKRingProgressView: UIView {
     
     /* The Antialiasing switch. Defaults to true. */
     
-    @IBInspectable public var allowsAntialiasing: Bool {
+    @IBInspectable open var allowsAntialiasing: Bool {
         get {
             return (layer as! MKRingProgressLayer).allowsAntialiasing
         }
@@ -104,7 +104,7 @@ public class MKRingProgressView: UIView {
     * one full revolution, i.e. 1.0 -> 360°, 2.0 -> 720°, etc. Defaults to 0.
     * Progress animation duration can be adjusted using `CATransaction.setAnimationDuration()` */
     
-    public var progress: Double {
+    open var progress: Double {
         get {
             return Double((layer as! MKRingProgressLayer).progress)
         }
@@ -113,7 +113,7 @@ public class MKRingProgressView: UIView {
         }
     }
     
-    public override class func layerClass() -> AnyClass {
+    open override class var layerClass: AnyClass {
         return MKRingProgressLayer.self
     }
     
@@ -122,40 +122,40 @@ public class MKRingProgressView: UIView {
 
 // MARK: Ring Progress Layer
 
-public class MKRingProgressLayer: CALayer {
+open class MKRingProgressLayer: CALayer {
     
-    public var startColor = UIColor.redColor().CGColor {
+    open var startColor = UIColor.red.cgColor {
         didSet {
             setNeedsRedrawContents()
         }
     }
     
-    public var endColor = UIColor.blueColor().CGColor {
+    open var endColor = UIColor.blue.cgColor {
         didSet {
             setNeedsRedrawContents()
         }
     }
     
-    public var backgroundRingColor: CGColorRef? = nil {
+    open var backgroundRingColor: CGColor? = nil {
         didSet {
             setNeedsDisplay()
         }
     }
     
-    public var ringWidth: CGFloat = 20 {
+    open var ringWidth: CGFloat = 20 {
         didSet {
             setNeedsRedrawContents()
         }
     }
     
-    public var endShadowOpacity: CGFloat = 1.0 {
+    open var endShadowOpacity: CGFloat = 1.0 {
         didSet {
             endShadowOpacity = min(max(endShadowOpacity, 0), 1)
             setNeedsDisplay()
         }
     }
     
-    public var allowsAntialiasing: Bool = true {
+    open var allowsAntialiasing: Bool = true {
         didSet {
             setNeedsDisplay()
         }
@@ -163,22 +163,22 @@ public class MKRingProgressLayer: CALayer {
     
     @NSManaged var progress: CGFloat
     
-    override public static func needsDisplayForKey(key: String) -> Bool {
+    override open static func needsDisplay(forKey key: String) -> Bool {
         if key == "progress" {
             return true
         }
-        return super.needsDisplayForKey(key)
+        return super.needsDisplay(forKey: key)
     }
     
-    override public func actionForKey(event: String) -> CAAction? {
+    override open func action(forKey event: String) -> CAAction? {
         if event == "progress" {
             let animation = CABasicAnimation(keyPath: event)
             animation.timingFunction = CAMediaTimingFunction(controlPoints: 0.2, 0.0, 0.1, 1.0)
-            animation.fromValue = presentationLayer()?.valueForKey(event)
+            animation.fromValue = presentation()?.value(forKey: event)
             animation.duration = max(0.01, CATransaction.animationDuration())
             return animation
         }
-        return super.actionForKey(event)
+        return super.action(forKey: event)
     }
     
     
@@ -187,7 +187,7 @@ public class MKRingProgressLayer: CALayer {
         setup()
     }
     
-    override init(layer: AnyObject) {
+    override init(layer: Any) {
         super.init(layer: layer)
         setup()
     }
@@ -198,7 +198,7 @@ public class MKRingProgressLayer: CALayer {
     }
     
     private func setup() {
-        self.contentsScale = UIScreen.mainScreen().scale
+        self.contentsScale = UIScreen.main.scale
     }
     
     
@@ -207,55 +207,55 @@ public class MKRingProgressLayer: CALayer {
         setNeedsDisplay()
     }
     
-    override public func display() {
+    override open func display() {
         self.contents = contentImage()
     }
     
-    private var _gradientImage: CGImageRef?
+    private var _gradientImage: CGImage?
     
-    private func gradientImage() -> CGImageRef {
+    private func gradientImage() -> CGImage {
         if _gradientImage == nil {
             let r = min(bounds.width, bounds.height)/2
             let r2 = r - ringWidth/2
             let s = Float(1.5 * ringWidth / (2 * π * r2))
-            _gradientImage = MKGradientGenerator.gradientImageWithType(.Conical, size: CGSize(width: r, height: r), colors: [endColor, endColor, startColor, startColor], locations: [0.0, s, (1.0 - s), 1.0], endPoint: CGPoint(x: 0.5 - CGFloat(2 * s), y: 1.0), scale: 1)
+            _gradientImage = MKGradientGenerator.gradientImage(type: .conical, size: CGSize(width: r, height: r), colors: [endColor, endColor, startColor, startColor], locations: [0.0, s, (1.0 - s), 1.0], endPoint: CGPoint(x: 0.5 - CGFloat(2 * s), y: 1.0), scale: 1)
         }
         return _gradientImage!
     }
     
-    func contentImage() -> CGImageRef {
+    func contentImage() -> CGImage {
         UIGraphicsBeginImageContextWithOptions(bounds.size, false, 0)
         let ctx = UIGraphicsGetCurrentContext()!
         
-        CGContextSetShouldAntialias(ctx, allowsAntialiasing)
-        CGContextSetAllowsAntialiasing(ctx, allowsAntialiasing)
+        ctx.setShouldAntialias(allowsAntialiasing)
+        ctx.setAllowsAntialiasing(allowsAntialiasing)
         
         let w: CGFloat = ringWidth
         let r = min(bounds.width, bounds.height)/2 - w/2
         let c = CGPoint(x: bounds.width/2, y: bounds.height/2)
-        let p = (self.presentationLayer() as? MKRingProgressLayer)?.progress ?? 0.0
+        let p = self.presentation()?.progress ?? 0.0
         let angleOffset = π / 2
         let angle = 2 * π * p - angleOffset
         let minAngle = 1.1 * atan(0.5 * w / r)
         let maxAngle = 2 * π - 3 * minAngle - angleOffset
         
         let circleRect = CGRect(x: bounds.width/2 - r, y: bounds.height/2 - r, width: 2*r, height: 2*r)
-        let circlePath = UIBezierPath(ovalInRect: circleRect)
+        let circlePath = UIBezierPath(ovalIn: circleRect)
         
         let angle1 = angle > maxAngle ? maxAngle : angle
         let arc1Path = UIBezierPath(arcCenter: c, radius: r, startAngle: -angleOffset, endAngle: angle1, clockwise: true)
         
         
-        CGContextSetLineWidth(ctx, w)
-        CGContextSetLineCap(ctx, .Round)
+        ctx.setLineWidth(w)
+        ctx.setLineCap(.round)
         
         
         // Draw backdrop circle
         
-        CGContextAddPath(ctx, circlePath.CGPath)
-        let bgColor = backgroundRingColor ?? CGColorCreateCopyWithAlpha(startColor, 0.15)
-        CGContextSetStrokeColorWithColor(ctx, bgColor)
-        CGContextStrokePath(ctx)
+        ctx.addPath(circlePath.cgPath)
+        let bgColor = backgroundRingColor ?? startColor.copy(alpha: 0.15)
+        ctx.setStrokeColor(bgColor!)
+        ctx.strokePath()
         
         
         // Draw solid arc
@@ -265,52 +265,54 @@ public class MKRingProgressLayer: CALayer {
             let offset = angle - maxAngle
             
             let arc2Path = UIBezierPath(arcCenter: c, radius: r, startAngle: -angleOffset, endAngle: offset, clockwise: true)
-            CGContextAddPath(ctx, arc2Path.CGPath)
-            CGContextSetStrokeColorWithColor(ctx, startColor)
-            CGContextStrokePath(ctx)
+            ctx.addPath(arc2Path.cgPath)
+            ctx.setStrokeColor(startColor)
+            ctx.strokePath()
             
-            CGContextTranslateCTM(ctx, circleRect.midX, circleRect.midY)
-            CGContextRotateCTM(ctx, offset)
-            CGContextTranslateCTM(ctx, -circleRect.midX, -circleRect.midY)
+            ctx.translateBy(x: circleRect.midX, y: circleRect.midY)
+            ctx.rotate(by: offset)
+            ctx.translateBy(x: -circleRect.midX, y: -circleRect.midY)
             
         }
         
         
         // Draw shadow
         
-        CGContextSaveGState(ctx)
+        ctx.saveGState()
         
-        CGContextAddPath(ctx, CGPathCreateCopyByStrokingPath(circlePath.CGPath, nil, w, .Round, .Round, 0))
-        CGContextClip(ctx)
+        ctx.addPath(CGPath(__byStroking: circlePath.cgPath, transform: nil, lineWidth: w, lineCap: .round, lineJoin: .round, miterLimit: 0)!)
+        ctx.clip()
         
         let shadowOffset = CGSize(width: w/10 * cos(angle + angleOffset), height: w/10 * sin(angle + angleOffset))
-        CGContextSetShadowWithColor(ctx, shadowOffset, w/3, UIColor(white: 0.0, alpha: endShadowOpacity).CGColor)
+        ctx.setShadow(offset: shadowOffset, blur: w/3, color: UIColor(white: 0.0, alpha: endShadowOpacity).cgColor)
         let arcEnd = CGPoint(x: c.x + r * cos(angle1), y: c.y + r * sin(angle1))
-        let shadowPath = UIBezierPath(ovalInRect: CGRect(x: arcEnd.x - w/2, y: arcEnd.y - w/2, width: w, height: w))
-        CGContextAddPath(ctx, shadowPath.CGPath)
-        CGContextSetFillColorWithColor(ctx, startColor)
-        CGContextFillPath(ctx)
+        let shadowPath = UIBezierPath(ovalIn: CGRect(x: arcEnd.x - w/2, y: arcEnd.y - w/2, width: w, height: w))
+        ctx.addPath(shadowPath.cgPath)
+        ctx.setFillColor(startColor)
+        ctx.fillPath()
         
-        CGContextRestoreGState(ctx)
+        ctx.restoreGState()
         
         
         // Draw gradient arc
         
-        CGContextSaveGState(ctx)
+        ctx.saveGState()
         
-        CGContextAddPath(ctx, CGPathCreateCopyByStrokingPath(arc1Path.CGPath, nil, w, .Round, .Round, 0))
-        CGContextClip(ctx)
+        ctx.addPath(CGPath(__byStroking: arc1Path.cgPath, transform: nil, lineWidth: w, lineCap: .round, lineJoin: .round, miterLimit: 0)!)
+        ctx.clip()
         
-        CGContextDrawImage(ctx, circleRect.insetBy(dx: -w/2, dy: -w/2), gradientImage())
+        ctx.draw(gradientImage(), in: circleRect.insetBy(dx: -w/2, dy: -w/2))
 
-        CGContextRestoreGState(ctx)
+        ctx.restoreGState()
         
         
         ///////
         
-        let img = UIGraphicsGetImageFromCurrentImageContext().CGImage!
+        let img = UIGraphicsGetImageFromCurrentImageContext()!.cgImage!
         UIGraphicsEndImageContext()
         
         return img
     }
 }
+
+fileprivate let π = CGFloat(M_PI)

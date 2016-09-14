@@ -40,10 +40,10 @@ class ViewController: UIViewController {
             button.contentView.ring3EndColor = progressGroup.ring3EndColor
             containerView.addSubview(button)
             buttons.append(button)
-            button.addTarget(self, action: #selector(ViewController.buttonTapped(_:)), forControlEvents: .TouchUpInside)
+            button.addTarget(self, action: #selector(ViewController.buttonTapped(_:)), for: .touchUpInside)
         }
         
-        buttons[0].selected = true
+        buttons[0].isSelected = true
         
         randomize()
         
@@ -60,30 +60,30 @@ class ViewController: UIViewController {
         iconsHeightConstraint.constant = progressGroup.ringWidth * 3 + progressGroup.ringSpacing * 2
     }
     
-    func buttonTapped(sender: MKRingProgressGroupButton) {
-        let newIndex = buttons.indexOf(sender) ?? 0
+    func buttonTapped(_ sender: MKRingProgressGroupButton) {
+        let newIndex = buttons.index(of: sender) ?? 0
         if newIndex == selectedIndex {
             return
         }
         
         let dx = (newIndex > selectedIndex) ? -self.view.frame.width : self.view.frame.width
         
-        buttons[selectedIndex].selected = false
-        sender.selected = true
+        buttons[selectedIndex].isSelected = false
+        sender.isSelected = true
         selectedIndex = newIndex
         
-        UIView.animateWithDuration(0.2, delay: 0.0, usingSpringWithDamping: 0.9, initialSpringVelocity: 0.0, options: [], animations: { () -> Void in
-            self.groupContainerView.transform = CGAffineTransformMakeTranslation(dx, 0)
+        UIView.animate(withDuration: 0.2, delay: 0.0, usingSpringWithDamping: 0.9, initialSpringVelocity: 0.0, options: [], animations: { () -> Void in
+            self.groupContainerView.transform = CGAffineTransform(translationX: dx, y: 0)
             }) { (_) -> Void in
-                self.groupContainerView.transform = CGAffineTransformMakeTranslation(-dx, 0)
+                self.groupContainerView.transform = CGAffineTransform(translationX: -dx, y: 0)
                 CATransaction.begin()
                 CATransaction.setAnimationDuration(0.0)
                 self.progressGroup.ring1.progress = 0.0
                 self.progressGroup.ring2.progress = 0.0
                 self.progressGroup.ring3.progress = 0.0
                 CATransaction.commit()
-                UIView.animateWithDuration(0.3, delay: 0.0, usingSpringWithDamping: 0.9, initialSpringVelocity: 0.0, options: [], animations: { () -> Void in
-                    self.groupContainerView.transform = CGAffineTransformIdentity
+                UIView.animate(withDuration: 0.3, delay: 0.0, usingSpringWithDamping: 0.9, initialSpringVelocity: 0.0, options: [], animations: { () -> Void in
+                    self.groupContainerView.transform = CGAffineTransform.identity
                     }, completion: { (_) -> Void in
                         self.updateMainGroupProgress()
                 })
@@ -100,7 +100,7 @@ class ViewController: UIViewController {
         CATransaction.commit()
     }
     
-    @IBAction func randomize(sender: AnyObject? = nil) {
+    @IBAction func randomize(_ sender: AnyObject? = nil) {
         for button in buttons {
             button.contentView.ring1.progress = Double(arc4random() % 200) / 100.0
             button.contentView.ring2.progress = Double(arc4random() % 200) / 100.0
@@ -112,6 +112,6 @@ class ViewController: UIViewController {
     
 }
 
-func delay(delay: Double, closure: ()->()) {
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(delay * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), closure)
+func delay(_ delay: Double, closure: @escaping ()->()) {
+    DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(Int64(delay * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC), execute: closure)
 }
