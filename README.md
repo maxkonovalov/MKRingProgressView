@@ -38,8 +38,8 @@ See example Xcode project. It also contains additional classes for convenient gr
 ### Code
 ```swift
 let ringProgressView = MKRingProgressView(frame: CGRect(x: 0, y: 100, width: 100, height: 100))
-ringProgressView.startColor = UIColor.redColor()
-ringProgressView.endColor = UIColor.magentaColor()
+ringProgressView.startColor = .red
+ringProgressView.endColor = .magenta
 ringProgressView.ringWidth = 25
 ringProgressView.progress = 0.0
 view.addSubview(ringProgressView)
@@ -58,8 +58,8 @@ CATransaction.commit()
 Conical gradient image for progress ring is drawn using [MKGradientGenerator](https://github.com/maxkonovalov/MKGradientView). It is already included in the code, so just add `MKGradientGenerator.swift` along with `MKRingProgressView.swift` file to your project.
 
 ## Requirements
-- iOS 7.0 (Cocoapods requires iOS 8 for Swift)
-- Xcode 7, Swift 2.0 
+- iOS 8.0
+- Xcode 8, Swift 3
 
 ## License
 `MKRingProgressView` is available under the MIT license. See the LICENSE file for more info.
