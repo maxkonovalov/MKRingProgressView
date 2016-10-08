@@ -67,8 +67,8 @@
 				508CBF7A1BD6C2C7008A3B4E /* AppDelegate.swift */,
 				508CBF7C1BD6C2C7008A3B4E /* ViewController.swift */,
 				508CBF7E1BD6C2C7008A3B4E /* Main.storyboard */,
-				508CBF811BD6C2C7008A3B4E /* Assets.xcassets */,
 				508CBF831BD6C2C7008A3B4E /* LaunchScreen.storyboard */,
+				508CBF811BD6C2C7008A3B4E /* Assets.xcassets */,
 				508CBF861BD6C2C7008A3B4E /* Info.plist */,
 			);
 			path = MKRingProgressViewExample;
