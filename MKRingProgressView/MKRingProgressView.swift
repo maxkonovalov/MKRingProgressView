@@ -29,8 +29,7 @@ import UIKit
 @IBDesignable
 open class MKRingProgressView: UIView {
     
-    /* The ring color for lowest progress values (closer to 0.0). */
-    
+    /// The start color of the progress ring.
     @IBInspectable open var startColor: UIColor {
         get {
             return UIColor(cgColor: (layer as! MKRingProgressLayer).startColor)
@@ -40,8 +39,7 @@ open class MKRingProgressView: UIView {
         }
     }
     
-    /* The ring color for highest progress values (closer to 1.0) */
-    
+    /// The end color of the progress ring.
     @IBInspectable open var endColor: UIColor {
         get {
             return UIColor(cgColor: (layer as! MKRingProgressLayer).endColor)
@@ -51,9 +49,8 @@ open class MKRingProgressView: UIView {
         }
     }
     
-    /* The color of backdrop circle, visible at progress values between 0.0 and 1.0.
-    * If not specified, `startColor` with 15% opacity will be used. */
-    
+    /// The color of backdrop circle, visible at progress values between 0.0 and 1.0.
+    /// If not specified, `startColor` with 15% opacity will be used.
     @IBInspectable open var backgroundRingColor: UIColor? {
         get {
             if let color = (layer as! MKRingProgressLayer).backgroundRingColor {
@@ -66,8 +63,7 @@ open class MKRingProgressView: UIView {
         }
     }
     
-    /* The width of the progress ring. Defaults to 20. */
-    
+    /// The width of the progress ring. Defaults to `20`.
     @IBInspectable open var ringWidth: CGFloat {
         get {
             return (layer as! MKRingProgressLayer).ringWidth
@@ -77,9 +73,8 @@ open class MKRingProgressView: UIView {
         }
     }
     
-    /* The opacity of the shadow below progress line end. Defaults to 1.
-    * Values outside the [0,1] range will be clamped. */
-
+    /// The opacity of the shadow below progress line end. Defaults to `1.0`.
+    /// Values outside the [0,1] range will be clamped.
     @IBInspectable open var shadowOpacity: CGFloat {
         get {
             return (layer as! MKRingProgressLayer).endShadowOpacity
@@ -89,8 +84,7 @@ open class MKRingProgressView: UIView {
         }
     }
     
-    /* The Antialiasing switch. Defaults to true. */
-    
+    /// The Antialiasing switch. Defaults to `true`.
     @IBInspectable open var allowsAntialiasing: Bool {
         get {
             return (layer as! MKRingProgressLayer).allowsAntialiasing
@@ -100,10 +94,8 @@ open class MKRingProgressView: UIView {
         }
     }
     
-    /* The progress. Can be any nonnegative number, every whole number corresponding to 
-    * one full revolution, i.e. 1.0 -> 360°, 2.0 -> 720°, etc. Defaults to 0.
-    * Progress animation duration can be adjusted using `CATransaction.setAnimationDuration()` */
-    
+    /// The progress. Can be any nonnegative number, every whole number corresponding to one full revolution, i.e. 1.0 -> 360°, 2.0 -> 720°, etc. Defaults to `0.0`.
+    /// Progress animation duration can be adjusted using `CATransaction.setAnimationDuration()`.
     open var progress: Double {
         get {
             return Double((layer as! MKRingProgressLayer).progress)
@@ -124,30 +116,35 @@ open class MKRingProgressView: UIView {
 
 open class MKRingProgressLayer: CALayer {
     
+    /// The progress ring start color.
     open var startColor = UIColor.red.cgColor {
         didSet {
             setNeedsRedrawContents()
         }
     }
     
+    /// The progress ring end color.
     open var endColor = UIColor.blue.cgColor {
         didSet {
             setNeedsRedrawContents()
         }
     }
     
+    /// The color of the background ring.
     open var backgroundRingColor: CGColor? = nil {
         didSet {
             setNeedsDisplay()
         }
     }
     
+    /// The width of the progress ring.
     open var ringWidth: CGFloat = 20 {
         didSet {
             setNeedsRedrawContents()
         }
     }
     
+    /// The opacity of the shadow under the progress end.
     open var endShadowOpacity: CGFloat = 1.0 {
         didSet {
             endShadowOpacity = min(max(endShadowOpacity, 0), 1)
@@ -155,13 +152,24 @@ open class MKRingProgressLayer: CALayer {
         }
     }
     
+    /// Whether or not to allow anti-aliasing for the generated image.
     open var allowsAntialiasing: Bool = true {
         didSet {
             setNeedsDisplay()
         }
     }
     
-    @NSManaged var progress: CGFloat
+    /// The scale of the generated gradient image.
+    /// Use lower values for better performance and higher values for more precise gradients.
+    open var gradientImageScale: CGFloat = 1.0 {
+        didSet {
+            setNeedsRedrawContents()
+        }
+    }
+    
+    /// The current progress shown by the view.
+    /// Values less than 0.0 are clamped. Values greater than 1.0 present multiple revolutions of the progress ring.
+    @NSManaged public var progress: CGFloat
     
     override open static func needsDisplay(forKey key: String) -> Bool {
         if key == "progress" {
@@ -218,7 +226,7 @@ open class MKRingProgressLayer: CALayer {
             let r = min(bounds.width, bounds.height)/2
             let r2 = r - ringWidth/2
             let s = Float(1.5 * ringWidth / (2 * π * r2))
-            _gradientImage = MKGradientGenerator.gradientImage(type: .conical, size: CGSize(width: r, height: r), colors: [endColor, endColor, startColor, startColor], locations: [0.0, s, (1.0 - s), 1.0], endPoint: CGPoint(x: 0.5 - CGFloat(2 * s), y: 1.0), scale: 1)
+            _gradientImage = MKGradientGenerator.gradientImage(type: .conical, size: CGSize(width: r, height: r), colors: [endColor, endColor, startColor, startColor], locations: [0.0, s, (1.0 - s), 1.0], endPoint: CGPoint(x: 0.5 - CGFloat(2 * s), y: 1.0), scale: gradientImageScale)
         }
         return _gradientImage!
     }
@@ -233,7 +241,7 @@ open class MKRingProgressLayer: CALayer {
         let w: CGFloat = ringWidth
         let r = min(bounds.width, bounds.height)/2 - w/2
         let c = CGPoint(x: bounds.width/2, y: bounds.height/2)
-        let p = self.presentation()?.progress ?? 0.0
+        let p = max(0.0, self.presentation()?.progress ?? 0.0)
         let angleOffset = π / 2
         let angle = 2 * π * p - angleOffset
         let minAngle = 1.1 * atan(0.5 * w / r)
