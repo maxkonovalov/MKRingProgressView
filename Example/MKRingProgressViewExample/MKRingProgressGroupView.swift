@@ -23,6 +23,7 @@ THE SOFTWARE.
 */
 
 import UIKit
+import MKRingProgressView
 
 @IBDesignable
 class MKRingProgressGroupView: UIView {
