@@ -1,9 +1,11 @@
 # MKRingProgressView
 
 [![Language](http://img.shields.io/badge/language-swift-brightgreen.svg?style=flat)](https://developer.apple.com/swift)
-[![Version](https://img.shields.io/cocoapods/v/MKRingProgressView.svg?style=flat)](http://cocoapods.org/pods/MKRingProgressView)
-[![License](https://img.shields.io/cocoapods/l/MKRingProgressView.svg?style=flat)](http://cocoapods.org/pods/MKRingProgressView)
 [![Platform](https://img.shields.io/cocoapods/p/MKRingProgressView.svg?style=flat)](http://cocoapods.org/pods/MKRingProgressView)
+[![License](https://img.shields.io/cocoapods/l/MKRingProgressView.svg?style=flat)](http://cocoapods.org/pods/MKRingProgressView)
+[![Version](https://img.shields.io/cocoapods/v/MKRingProgressView.svg?style=flat)](http://cocoapods.org/pods/MKRingProgressView)
+[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
+
 
 Ring progress view similar to Activity app on Apple Watch
 
@@ -19,15 +21,22 @@ Ring progress view similar to Activity app on Apple Watch
 ## Installation
 ### CocoaPods
 
-`MKRingProgressView ` is available through [CocoaPods](http://cocoapods.org). To install
-it, simply add the following line to your Podfile:
+To install `MKRingProgressView` via [CocoaPods](http://cocoapods.org), add the following line to your Podfile:
 
-```ruby
+```
 pod 'MKRingProgressView'
 ```
 
+### Carthage
+
+To install `MKRingProgressView` via [Carthage](https://github.com/Carthage/Carthage#if-youre-building-for-ios-tvos-or-watchos), add the following line to your Cartfile:
+
+```
+github "maxkonovalov/MKRingProgressView"
+```
+
 ### Manually
-Just add `MKRingProgressView` folder to your Xcode project.
+Just add `MKGradientGenerator.swift` and `MKRingProgressView.swift` to your Xcode project.
 
 ## Usage
 See example Xcode project. It also contains additional classes for convenient grouping of 3 ring progress views replicating Activity app by Apple.
