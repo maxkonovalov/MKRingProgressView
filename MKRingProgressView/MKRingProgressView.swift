@@ -32,20 +32,20 @@ open class MKRingProgressView: UIView {
     /// The start color of the progress ring.
     @IBInspectable open var startColor: UIColor {
         get {
-            return UIColor(cgColor: (layer as! MKRingProgressLayer).startColor)
+            return UIColor(cgColor: ringProgressLayer.startColor)
         }
         set {
-            (layer as! MKRingProgressLayer).startColor = newValue.cgColor
+            ringProgressLayer.startColor = newValue.cgColor
         }
     }
     
     /// The end color of the progress ring.
     @IBInspectable open var endColor: UIColor {
         get {
-            return UIColor(cgColor: (layer as! MKRingProgressLayer).endColor)
+            return UIColor(cgColor: ringProgressLayer.endColor)
         }
         set {
-            (layer as! MKRingProgressLayer).endColor = newValue.cgColor
+            ringProgressLayer.endColor = newValue.cgColor
         }
     }
     
@@ -53,23 +53,23 @@ open class MKRingProgressView: UIView {
     /// If not specified, `startColor` with 15% opacity will be used.
     @IBInspectable open var backgroundRingColor: UIColor? {
         get {
-            if let color = (layer as! MKRingProgressLayer).backgroundRingColor {
+            if let color = ringProgressLayer.backgroundRingColor {
                 return UIColor(cgColor: color)
             }
             return nil
         }
         set {
-            (layer as! MKRingProgressLayer).backgroundRingColor = newValue?.cgColor
+            ringProgressLayer.backgroundRingColor = newValue?.cgColor
         }
     }
     
     /// The width of the progress ring. Defaults to `20`.
     @IBInspectable open var ringWidth: CGFloat {
         get {
-            return (layer as! MKRingProgressLayer).ringWidth
+            return ringProgressLayer.ringWidth
         }
         set {
-            (layer as! MKRingProgressLayer).ringWidth = newValue
+            ringProgressLayer.ringWidth = newValue
         }
     }
     
@@ -77,20 +77,30 @@ open class MKRingProgressView: UIView {
     /// Values outside the [0,1] range will be clamped.
     @IBInspectable open var shadowOpacity: CGFloat {
         get {
-            return (layer as! MKRingProgressLayer).endShadowOpacity
+            return ringProgressLayer.endShadowOpacity
         }
         set {
-            (layer as! MKRingProgressLayer).endShadowOpacity = newValue
+            ringProgressLayer.endShadowOpacity = newValue
         }
     }
     
     /// The Antialiasing switch. Defaults to `true`.
     @IBInspectable open var allowsAntialiasing: Bool {
         get {
-            return (layer as! MKRingProgressLayer).allowsAntialiasing
+            return ringProgressLayer.allowsAntialiasing
         }
         set {
-            (layer as! MKRingProgressLayer).allowsAntialiasing = newValue
+            ringProgressLayer.allowsAntialiasing = newValue
+        }
+    }
+    
+    /// The style of the progress line end. Defaults to `round`.
+    open var style: ProgressStyle {
+        get {
+            return ringProgressLayer.progressStyle
+        }
+        set {
+            ringProgressLayer.progressStyle = newValue
         }
     }
     
@@ -98,17 +108,45 @@ open class MKRingProgressView: UIView {
     /// Progress animation duration can be adjusted using `CATransaction.setAnimationDuration()`.
     open var progress: Double {
         get {
-            return Double((layer as! MKRingProgressLayer).progress)
+            return Double(ringProgressLayer.progress)
         }
         set {
-            (layer as! MKRingProgressLayer).progress = CGFloat(newValue)
+            ringProgressLayer.progress = CGFloat(newValue)
         }
     }
     
     open override class var layerClass: AnyClass {
         return MKRingProgressLayer.self
     }
+        
+    private var ringProgressLayer: MKRingProgressLayer {
+        return layer as! MKRingProgressLayer
+    }
     
+}
+
+public enum ProgressStyle {
+    case round
+    case square
+}
+
+fileprivate extension ProgressStyle {
+    var lineCap: CGLineCap {
+        switch self {
+        case .round:
+            return .round
+        case .square:
+            return .butt
+        }
+    }
+    var lineJoin: CGLineJoin {
+        switch self {
+        case .round:
+            return .round
+        case .square:
+            return .miter
+        }
+    }
 }
 
 
@@ -141,6 +179,13 @@ open class MKRingProgressLayer: CALayer {
     open var ringWidth: CGFloat = 20 {
         didSet {
             setNeedsRedrawContents()
+        }
+    }
+    
+    /// The style of the progress line end (rounded or straight).
+    open var progressStyle: ProgressStyle = .round {
+        didSet {
+            setNeedsDisplay()
         }
     }
     
@@ -199,7 +244,7 @@ open class MKRingProgressLayer: CALayer {
         super.init(layer: layer)
         setup()
     }
-
+    
     required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         setup()
@@ -255,7 +300,7 @@ open class MKRingProgressLayer: CALayer {
         
         
         ctx.setLineWidth(w)
-        ctx.setLineCap(.round)
+        ctx.setLineCap(progressStyle.lineCap)
         
         
         // Draw backdrop circle
@@ -294,9 +339,21 @@ open class MKRingProgressLayer: CALayer {
         let shadowOffset = CGSize(width: w/10 * cos(angle + angleOffset), height: w/10 * sin(angle + angleOffset))
         ctx.setShadow(offset: shadowOffset, blur: w/3, color: UIColor(white: 0.0, alpha: endShadowOpacity).cgColor)
         let arcEnd = CGPoint(x: c.x + r * cos(angle1), y: c.y + r * sin(angle1))
-        let shadowPath = UIBezierPath(ovalIn: CGRect(x: arcEnd.x - w/2, y: arcEnd.y - w/2, width: w, height: w))
+        
+        let shadowPath: UIBezierPath
+        
+        switch progressStyle {
+        case .round:
+            shadowPath = UIBezierPath(ovalIn: CGRect(x: arcEnd.x - w/2, y: arcEnd.y - w/2, width: w, height: w))
+        case .square:
+            shadowPath = UIBezierPath(rect: CGRect(x: arcEnd.x - w/2, y: arcEnd.y - 2, width: w, height: 2))
+            shadowPath.apply(CGAffineTransform(translationX: -arcEnd.x, y: -arcEnd.y))
+            shadowPath.apply(CGAffineTransform(rotationAngle: angle1))
+            shadowPath.apply(CGAffineTransform(translationX: arcEnd.x, y: arcEnd.y))
+        }
+        
         ctx.addPath(shadowPath.cgPath)
-        ctx.setFillColor(startColor)
+        ctx.setFillColor(endColor)
         ctx.fillPath()
         
         ctx.restoreGState()
@@ -306,11 +363,16 @@ open class MKRingProgressLayer: CALayer {
         
         ctx.saveGState()
         
-        ctx.addPath(CGPath(__byStroking: arc1Path.cgPath, transform: nil, lineWidth: w, lineCap: .round, lineJoin: .round, miterLimit: 0)!)
+        ctx.addPath(CGPath(__byStroking: arc1Path.cgPath,
+                           transform: nil,
+                           lineWidth: w,
+                           lineCap: progressStyle.lineCap,
+                           lineJoin: progressStyle.lineJoin,
+                           miterLimit: 0)!)
         ctx.clip()
         
         ctx.draw(gradientImage(), in: circleRect.insetBy(dx: -w/2, dy: -w/2))
-
+        
         ctx.restoreGState()
         
         
