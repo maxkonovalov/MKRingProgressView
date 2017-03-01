@@ -276,9 +276,11 @@ open class MKRingProgressLayer: CALayer {
         return _gradientImage!
     }
     
-    func contentImage() -> CGImage {
+    func contentImage() -> CGImage? {
         UIGraphicsBeginImageContextWithOptions(bounds.size, false, 0)
-        let ctx = UIGraphicsGetCurrentContext()!
+        guard let ctx = UIGraphicsGetCurrentContext() else {
+            return nil
+        }
         
         ctx.setShouldAntialias(allowsAntialiasing)
         ctx.setAllowsAntialiasing(allowsAntialiasing)
