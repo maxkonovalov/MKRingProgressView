@@ -104,6 +104,17 @@ open class MKRingProgressView: UIView {
         }
     }
     
+    /// The scale of the generated gradient image.
+    /// Use lower values for better performance and higher values for more precise gradients.
+    open var gradientImageScale: CGFloat {
+        get {
+            return ringProgressLayer.gradientImageScale
+        }
+        set {
+            ringProgressLayer.gradientImageScale = newValue
+        }
+    }
+    
     /// The progress. Can be any nonnegative number, every whole number corresponding to one full revolution, i.e. 1.0 -> 360°, 2.0 -> 720°, etc. Defaults to `0.0`.
     /// Progress animation duration can be adjusted using `CATransaction.setAnimationDuration()`.
     open var progress: Double {
