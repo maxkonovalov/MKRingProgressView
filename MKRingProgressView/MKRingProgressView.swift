@@ -73,6 +73,16 @@ open class MKRingProgressView: UIView {
         }
     }
     
+    /// The style of the progress line end. Defaults to `round`.
+    open var style: ProgressStyle {
+        get {
+            return ringProgressLayer.progressStyle
+        }
+        set {
+            ringProgressLayer.progressStyle = newValue
+        }
+    }
+    
     /// The opacity of the shadow below progress line end. Defaults to `1.0`.
     /// Values outside the [0,1] range will be clamped.
     @IBInspectable open var shadowOpacity: CGFloat {
@@ -91,16 +101,6 @@ open class MKRingProgressView: UIView {
         }
         set {
             ringProgressLayer.allowsAntialiasing = newValue
-        }
-    }
-    
-    /// The style of the progress line end. Defaults to `round`.
-    open var style: ProgressStyle {
-        get {
-            return ringProgressLayer.progressStyle
-        }
-        set {
-            ringProgressLayer.progressStyle = newValue
         }
     }
     
