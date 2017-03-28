@@ -267,7 +267,7 @@ extension RGBA {
 
 // MARK: - Utility
 
-fileprivate let π = CGFloat(M_PI)
+fileprivate let π = CGFloat(Double.pi)
 
 fileprivate func lerp(_ t: Float, _ a: UInt8, _ b: UInt8) -> UInt8 {
     return UInt8(Float(a) + min(max(t, 0), 1) * (Float(b) - Float(a)))
