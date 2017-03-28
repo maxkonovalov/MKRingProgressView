@@ -398,4 +398,4 @@ open class MKRingProgressLayer: CALayer {
     }
 }
 
-fileprivate let π = CGFloat(Double.pi)
+fileprivate let π = CGFloat.pi
