@@ -60,7 +60,7 @@ class ViewController: UIViewController {
         iconsHeightConstraint.constant = progressGroup.ringWidth * 3 + progressGroup.ringSpacing * 2
     }
     
-    func buttonTapped(_ sender: MKRingProgressGroupButton) {
+    @objc func buttonTapped(_ sender: MKRingProgressGroupButton) {
         let newIndex = buttons.index(of: sender) ?? 0
         if newIndex == selectedIndex {
             return
