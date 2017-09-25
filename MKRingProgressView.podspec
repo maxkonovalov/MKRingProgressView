@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = "MKRingProgressView"
-  s.version          = "1.1.3"
+  s.version          = "1.1.4"
   s.summary          = "Ring progress view similar to Activity app on Apple Watch"
   s.homepage         = "https://github.com/maxkonovalov/MKRingProgressView"
   s.license          = 'MIT'

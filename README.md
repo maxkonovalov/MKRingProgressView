@@ -68,7 +68,7 @@ Conical gradient image for progress ring is drawn using [MKGradientGenerator](ht
 
 ## Requirements
 - iOS 8.0
-- Xcode 8, Swift 3
+- Xcode 9, Swift 4
 
 ## License
 `MKRingProgressView` is available under the MIT license. See the LICENSE file for more info.
