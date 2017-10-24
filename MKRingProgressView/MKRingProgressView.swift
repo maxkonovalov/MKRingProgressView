@@ -62,7 +62,18 @@ open class MKRingProgressView: UIView {
             ringProgressLayer.backgroundRingColor = newValue?.cgColor
         }
     }
-    
+
+    // The blur of the backdrop circle:
+    // Default to 0
+    @IBInspectable open var backgroundRingBlurRadius: CGFloat {
+        get {
+            return ringProgressLayer.backgroundRingBlurRadius
+        }
+        set {
+            ringProgressLayer.backgroundRingBlurRadius = newValue
+        }
+    }
+
     /// The width of the progress ring. Defaults to `20`.
     @IBInspectable open var ringWidth: CGFloat {
         get {
@@ -93,7 +104,7 @@ open class MKRingProgressView: UIView {
             ringProgressLayer.endShadowOpacity = newValue
         }
     }
-    
+
     /// The Antialiasing switch. Defaults to `true`.
     @IBInspectable open var allowsAntialiasing: Bool {
         get {
@@ -181,6 +192,13 @@ open class MKRingProgressLayer: CALayer {
     
     /// The color of the background ring.
     open var backgroundRingColor: CGColor? = nil {
+        didSet {
+            setNeedsDisplay()
+        }
+    }
+
+    /// The blur of the background ring.
+    open var backgroundRingBlurRadius: CGFloat = 0 {
         didSet {
             setNeedsDisplay()
         }
@@ -286,8 +304,57 @@ open class MKRingProgressLayer: CALayer {
         }
         return _gradientImage!
     }
+
+    func backgroundRingImage() -> UIImage? {
+        UIGraphicsBeginImageContextWithOptions(bounds.size, false, 0)
+        guard let ctx = UIGraphicsGetCurrentContext() else {
+            return nil
+        }
+        ctx.setShouldAntialias(allowsAntialiasing)
+        ctx.setAllowsAntialiasing(allowsAntialiasing)
+        
+        let w: CGFloat = ringWidth
+        let r = min(bounds.width, bounds.height)/2 - w/2 - backgroundRingBlurRadius
+        let c = CGPoint(x: bounds.width/2, y: bounds.height/2)
+
+        let circleRect = CGRect(x: c.x - r, y: c.y - r, width: 2*r, height: 2*r)
+        let circlePath = UIBezierPath(ovalIn: circleRect)
+
+        ctx.setLineWidth(w)
+        ctx.setLineCap(progressStyle.lineCap)
+        ctx.addPath(circlePath.cgPath)
+        let bgColor = backgroundRingColor ?? startColor.copy(alpha: 0.15)
+        ctx.setStrokeColor(bgColor!)
+        ctx.strokePath()
+        
+        let result = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+
+        guard let validResult = result else {
+            return nil
+        }
+
+        if backgroundRingBlurRadius == 0 {
+            return validResult
+        } else {
+            let filteringImage = CIImage(image: validResult)
+            let blurfilter = CIFilter(name: "CIGaussianBlur")
+            blurfilter?.setValue(backgroundRingBlurRadius, forKey: "inputRadius")
+            blurfilter?.setValue(filteringImage, forKey: kCIInputImageKey)
+            
+            if let filteredImage = blurfilter?.outputImage, let sourceImage = filteringImage {
+                let context = CIContext()
+                if let blurredImage = context.createCGImage(filteredImage, from: sourceImage.extent) {
+                    let image = UIImage(cgImage: blurredImage)
+                    return image
+                }
+            }
+            return nil
+        }
+    }
     
     func contentImage() -> CGImage? {
+        let backgroundRingImage = self.backgroundRingImage()
         UIGraphicsBeginImageContextWithOptions(bounds.size, false, 0)
         guard let ctx = UIGraphicsGetCurrentContext() else {
             return nil
@@ -297,7 +364,7 @@ open class MKRingProgressLayer: CALayer {
         ctx.setAllowsAntialiasing(allowsAntialiasing)
         
         let w: CGFloat = ringWidth
-        let r = min(bounds.width, bounds.height)/2 - w/2
+        let r = min(bounds.width, bounds.height)/2 - w/2 - backgroundRingBlurRadius
         let c = CGPoint(x: bounds.width/2, y: bounds.height/2)
         let p = max(0.0, self.presentation()?.progress ?? 0.0)
         let angleOffset = π / 2
@@ -317,12 +384,14 @@ open class MKRingProgressLayer: CALayer {
         
         
         // Draw backdrop circle
-        
-        ctx.addPath(circlePath.cgPath)
-        let bgColor = backgroundRingColor ?? startColor.copy(alpha: 0.15)
-        ctx.setStrokeColor(bgColor!)
-        ctx.strokePath()
-        
+        if let image = backgroundRingImage {
+            ctx.draw(image.cgImage!, in: bounds)
+        } else {
+            ctx.addPath(circlePath.cgPath)
+            let bgColor = backgroundRingColor ?? startColor.copy(alpha: 0.15)
+            ctx.setStrokeColor(bgColor!)
+            ctx.strokePath()
+        }
         
         // Draw solid arc
         
@@ -343,7 +412,6 @@ open class MKRingProgressLayer: CALayer {
         
         
         // Draw shadow
-        
         ctx.saveGState()
         
         ctx.addPath(CGPath(__byStroking: circlePath.cgPath, transform: nil, lineWidth: w, lineCap: .round, lineJoin: .round, miterLimit: 0)!)
