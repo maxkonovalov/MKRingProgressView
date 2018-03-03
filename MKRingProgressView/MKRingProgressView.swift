@@ -74,7 +74,7 @@ open class MKRingProgressView: UIView {
     }
     
     /// The style of the progress line end. Defaults to `round`.
-    open var style: ProgressStyle {
+    @objc open var style: ProgressStyle {
         get {
             return ringProgressLayer.progressStyle
         }
@@ -106,7 +106,7 @@ open class MKRingProgressView: UIView {
     
     /// The scale of the generated gradient image.
     /// Use lower values for better performance and higher values for more precise gradients.
-    open var gradientImageScale: CGFloat {
+    @objc open var gradientImageScale: CGFloat {
         get {
             return ringProgressLayer.gradientImageScale
         }
@@ -117,7 +117,7 @@ open class MKRingProgressView: UIView {
     
     /// The progress. Can be any nonnegative number, every whole number corresponding to one full revolution, i.e. 1.0 -> 360°, 2.0 -> 720°, etc. Defaults to `0.0`.
     /// Progress animation duration can be adjusted using `CATransaction.setAnimationDuration()`.
-    open var progress: Double {
+    @objc open var progress: Double {
         get {
             return Double(ringProgressLayer.progress)
         }
@@ -136,7 +136,8 @@ open class MKRingProgressView: UIView {
     
 }
 
-public enum ProgressStyle {
+@objc(MKRingProgressViewStyle)
+public enum ProgressStyle: Int {
     case round
     case square
 }
@@ -166,42 +167,42 @@ fileprivate extension ProgressStyle {
 open class MKRingProgressLayer: CALayer {
     
     /// The progress ring start color.
-    open var startColor = UIColor.red.cgColor {
+    @objc open var startColor = UIColor.red.cgColor {
         didSet {
             setNeedsRedrawContents()
         }
     }
     
     /// The progress ring end color.
-    open var endColor = UIColor.blue.cgColor {
+    @objc open var endColor = UIColor.blue.cgColor {
         didSet {
             setNeedsRedrawContents()
         }
     }
     
     /// The color of the background ring.
-    open var backgroundRingColor: CGColor? = nil {
+    @objc open var backgroundRingColor: CGColor? = nil {
         didSet {
             setNeedsDisplay()
         }
     }
     
     /// The width of the progress ring.
-    open var ringWidth: CGFloat = 20 {
+    @objc open var ringWidth: CGFloat = 20 {
         didSet {
             setNeedsRedrawContents()
         }
     }
     
     /// The style of the progress line end (rounded or straight).
-    open var progressStyle: ProgressStyle = .round {
+    @objc open var progressStyle: ProgressStyle = .round {
         didSet {
             setNeedsDisplay()
         }
     }
     
     /// The opacity of the shadow under the progress end.
-    open var endShadowOpacity: CGFloat = 1.0 {
+    @objc open var endShadowOpacity: CGFloat = 1.0 {
         didSet {
             endShadowOpacity = min(max(endShadowOpacity, 0), 1)
             setNeedsDisplay()
@@ -209,7 +210,7 @@ open class MKRingProgressLayer: CALayer {
     }
     
     /// Whether or not to allow anti-aliasing for the generated image.
-    open var allowsAntialiasing: Bool = true {
+    @objc open var allowsAntialiasing: Bool = true {
         didSet {
             setNeedsDisplay()
         }
@@ -217,7 +218,7 @@ open class MKRingProgressLayer: CALayer {
     
     /// The scale of the generated gradient image.
     /// Use lower values for better performance and higher values for more precise gradients.
-    open var gradientImageScale: CGFloat = 1.0 {
+    @objc open var gradientImageScale: CGFloat = 1.0 {
         didSet {
             setNeedsRedrawContents()
         }
@@ -281,7 +282,7 @@ open class MKRingProgressLayer: CALayer {
         if _gradientImage == nil {
             let r = min(bounds.width, bounds.height)/2
             let r2 = r - ringWidth/2
-            let s = Float(1.5 * ringWidth / (2 * π * r2))
+            let s = Float(1.5 * ringWidth / (2 * .pi * r2))
             _gradientImage = MKGradientGenerator.gradientImage(type: .conical, size: CGSize(width: r, height: r), colors: [endColor, endColor, startColor, startColor], locations: [0.0, s, (1.0 - s), 1.0], endPoint: CGPoint(x: 0.5 - CGFloat(2 * s), y: 1.0), scale: gradientImageScale)
         }
         return _gradientImage!
@@ -300,10 +301,10 @@ open class MKRingProgressLayer: CALayer {
         let r = min(bounds.width, bounds.height)/2 - w/2
         let c = CGPoint(x: bounds.width/2, y: bounds.height/2)
         let p = max(0.0, self.presentation()?.progress ?? 0.0)
-        let angleOffset = π / 2
-        let angle = 2 * π * p - angleOffset
+        let angleOffset = CGFloat.pi / 2
+        let angle = 2 * .pi * p - angleOffset
         let minAngle = 1.1 * atan(0.5 * w / r)
-        let maxAngle = 2 * π - 3 * minAngle - angleOffset
+        let maxAngle = 2 * .pi - 3 * minAngle - angleOffset
         
         let circleRect = CGRect(x: bounds.width/2 - r, y: bounds.height/2 - r, width: 2*r, height: 2*r)
         let circlePath = UIBezierPath(ovalIn: circleRect)
@@ -397,5 +398,3 @@ open class MKRingProgressLayer: CALayer {
         return img
     }
 }
-
-fileprivate let π = CGFloat.pi

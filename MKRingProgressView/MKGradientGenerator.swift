@@ -26,7 +26,7 @@ import UIKit
 
 // MARK: - Gradient Generator
 
-public enum GradientType: Int {
+public enum GradientType {
     case linear
     case radial
     case conical
@@ -58,7 +58,7 @@ open class MKGradientGenerator {
         return img!
     }
     
-    fileprivate class func pixelDataForGradient(_ gradientType: GradientType, colors: [[CGColor]?], locations: [[Float]?], startPoints: [CGPoint?], endPoints: [CGPoint?], point: CGPoint, size: CGSize) -> RGBA {
+    private class func pixelDataForGradient(_ gradientType: GradientType, colors: [[CGColor]?], locations: [[Float]?], startPoints: [CGPoint?], endPoints: [CGPoint?], point: CGPoint, size: CGSize) -> RGBA {
         assert(colors.count > 0)
         
         var colors = colors
@@ -121,7 +121,7 @@ open class MKGradientGenerator {
         }
     }
     
-    fileprivate class func uniformLocationsWithCount(_ count: Int) -> [Float] {
+    private class func uniformLocationsWithCount(_ count: Int) -> [Float] {
         var locations = [Float]()
         for i in 0..<count {
             locations.append(Float(i)/Float(count-1))
@@ -129,14 +129,14 @@ open class MKGradientGenerator {
         return locations
     }
     
-    fileprivate class func linearGradientStop(_ point: CGPoint, _ size: CGSize, _ g0: CGPoint, _ g1: CGPoint) -> Float {
+    private class func linearGradientStop(_ point: CGPoint, _ size: CGSize, _ g0: CGPoint, _ g1: CGPoint) -> Float {
         let s = CGPoint(x: size.width * (g1.x - g0.x), y: size.height * (g1.y - g0.y))
         let p = CGPoint(x: point.x - size.width * g0.x, y: point.y - size.height * g0.y)
         let t = (p.x * s.x + p.y * s.y) / (s.x * s.x + s.y * s.y)
         return Float(t)
     }
     
-    fileprivate class func radialGradientStop(_ point: CGPoint, _ size: CGSize, _ g0: CGPoint, _ g1: CGPoint) -> Float {
+    private class func radialGradientStop(_ point: CGPoint, _ size: CGSize, _ g0: CGPoint, _ g1: CGPoint) -> Float {
         let c = CGPoint(x: size.width * g0.x, y: size.height * g0.y)
         let s = CGPoint(x: size.width * (g1.x - g0.x), y: size.height * (g1.y - g0.y))
         let d = sqrt(s.x * s.x + s.y * s.y)
@@ -146,20 +146,20 @@ open class MKGradientGenerator {
         return Float(t)
     }
     
-    fileprivate class func conicalGradientStop(_ point: CGPoint, _ size: CGSize, _ g0: CGPoint, _ g1: CGPoint) -> Float {
+    private class func conicalGradientStop(_ point: CGPoint, _ size: CGSize, _ g0: CGPoint, _ g1: CGPoint) -> Float {
         let c = CGPoint(x: size.width * g0.x, y: size.height * g0.y)
         let s = CGPoint(x: size.width * (g1.x - g0.x), y: size.height * (g1.y - g0.y))
         let q = atan2(s.y, s.x)
         let p = CGPoint(x: point.x - c.x, y: point.y - c.y)
         var a = atan2(p.y, p.x) - q
         if a < 0 {
-            a += 2 * π
+            a += 2 * .pi
         }
-        let t = a / (2 * π)
+        let t = a / (2 * .pi)
         return Float(t)
     }
     
-    fileprivate class func interpolatedColor(_ t: Float, _ colors: [CGColor], _ locations: [Float]) -> RGBA {
+    private class func interpolatedColor(_ t: Float, _ colors: [CGColor], _ locations: [Float]) -> RGBA {
         assert(!colors.isEmpty)
         assert(colors.count == locations.count)
         
@@ -206,26 +206,25 @@ fileprivate struct RGBA {
 }
 
 extension RGBA: Equatable {
-}
-
-fileprivate func ==(lhs: RGBA, rhs: RGBA) -> Bool {
-    return (lhs.r == rhs.r && lhs.g == rhs.g && lhs.b == rhs.b && lhs.a == rhs.a)
+    static func ==(lhs: RGBA, rhs: RGBA) -> Bool {
+        return (lhs.r == rhs.r && lhs.g == rhs.g && lhs.b == rhs.b && lhs.a == rhs.a)
+    }
 }
 
 extension RGBA {
     
-    fileprivate init() {
+    init() {
         self.init(r: 0, g: 0, b: 0, a: 0)
     }
     
-    fileprivate init(_ hex: Int) {
+    init(_ hex: Int) {
         let r = UInt8((hex >> 16) & 0xff)
         let g = UInt8((hex >> 08) & 0xff)
         let b = UInt8((hex >> 00) & 0xff)
         self.init(r: r, g: g, b: b, a: 0xff)
     }
     
-    fileprivate init(_ color: UIColor) {
+    init(_ color: UIColor) {
         var r: CGFloat = 0
         var g: CGFloat = 0
         var b: CGFloat = 0
@@ -234,7 +233,7 @@ extension RGBA {
         self.init(r: UInt8(r * 0xff), g: UInt8(g * 0xff), b: UInt8(b * 0xff), a: UInt8(a * 0xff))
     }
     
-    fileprivate init(_ color: CGColor) {
+    init(_ color: CGColor) {
         let c = color.components?.map { min(max($0, 0.0), 1.0) }
         switch color.numberOfComponents {
         case 2:
@@ -246,15 +245,15 @@ extension RGBA {
         }
     }
     
-    fileprivate var uiColor: UIColor {
+    var uiColor: UIColor {
         return UIColor(red: CGFloat(r)/0xff, green: CGFloat(g)/0xff, blue: CGFloat(b)/0xff, alpha: CGFloat(a)/0xff)
     }
     
-    fileprivate var cgColor: CGColor {
+    var cgColor: CGColor {
         return self.uiColor.cgColor
     }
     
-    fileprivate func interpolateTo(_ color: RGBA, _ t: Float) -> RGBA {
+    func interpolateTo(_ color: RGBA, _ t: Float) -> RGBA {
         let r = lerp(t, self.r, color.r)
         let g = lerp(t, self.g, color.g)
         let b = lerp(t, self.b, color.b)
@@ -266,8 +265,6 @@ extension RGBA {
 
 
 // MARK: - Utility
-
-fileprivate let π = CGFloat.pi
 
 fileprivate func lerp(_ t: Float, _ a: UInt8, _ b: UInt8) -> UInt8 {
     return UInt8(Float(a) + min(max(t, 0), 1) * (Float(b) - Float(a)))
