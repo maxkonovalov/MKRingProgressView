@@ -136,6 +136,13 @@ open class MKRingProgressView: UIView {
     
     // Accessibility for individual rings
     
+    /// A unique string descriptor for the ring that is also used for accessibility.
+    @objc open var identifier: String? {
+        didSet {
+            accessibilityIdentifier = identifier
+        }
+    }
+    
     open override var isAccessibilityElement: Bool {
         get { return true }
         set { }
@@ -147,7 +154,7 @@ open class MKRingProgressView: UIView {
     }
     
     open override var accessibilityLabel: String? {
-        get { return "\(accessibilityIdentifier ?? "Ring"): \(self.progress * 100) %" }
+        get { return "\(identifier ?? accessibilityIdentifier ?? "Ring"): \(self.progress * 100) %" }
         set { }
     }
 }

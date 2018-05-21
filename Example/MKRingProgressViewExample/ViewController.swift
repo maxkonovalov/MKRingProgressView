@@ -25,6 +25,11 @@ class ViewController: UIViewController {
         let containerView = UIView(frame: navigationController!.navigationBar.bounds)
         navigationController!.navigationBar.addSubview(containerView)
         
+        // These are optional and only serve to improve accessibility
+        progressGroup.ring1.identifier = "Move"
+        progressGroup.ring2.identifier = "Exercise"
+        progressGroup.ring3.identifier = "Stand"
+        
         let n = 7
         for i in 0..<n {
             let w = (containerView.bounds.width - 16) / CGFloat(n)
