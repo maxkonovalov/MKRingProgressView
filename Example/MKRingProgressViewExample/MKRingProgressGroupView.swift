@@ -108,4 +108,24 @@ class MKRingProgressGroupView: UIView {
 
     }
 
+    // Accessibility for grouped rings
+    
+    open override var isAccessibilityElement: Bool {
+        get { return true }
+        set { }
+    }
+    
+    open override var accessibilityFrame: CGRect {
+        get { return self.convert(bounds, to: UIScreen.main.coordinateSpace) }
+        set { }
+    }
+    
+    open override var accessibilityLabel: String? {
+        get { return """
+            \(ring1.accessibilityIdentifier ?? "Ring 1"): \(ring1.progress * 100) %,
+            \(ring2.accessibilityIdentifier ?? "Ring 2"): \(ring2.progress * 100) %,
+            \(ring3.accessibilityIdentifier ?? "Ring 3"): \(ring3.progress * 100) %
+            """ }
+        set { }
+    }
 }
