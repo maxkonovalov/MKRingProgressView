@@ -129,11 +129,27 @@ open class MKRingProgressView: UIView {
     open override class var layerClass: AnyClass {
         return MKRingProgressLayer.self
     }
-        
+    
     private var ringProgressLayer: MKRingProgressLayer {
         return layer as! MKRingProgressLayer
     }
     
+    // Accessibility for individual rings
+    
+    open override var isAccessibilityElement: Bool {
+        get { return true }
+        set { }
+    }
+    
+    open override var accessibilityFrame: CGRect {
+        get { return self.convert(bounds, to: UIScreen.main.coordinateSpace) }
+        set { }
+    }
+    
+    open override var accessibilityLabel: String? {
+        get { return "\(accessibilityIdentifier ?? "Ring"): \(self.progress * 100) %" }
+        set { }
+    }
 }
 
 @objc(MKRingProgressViewStyle)
