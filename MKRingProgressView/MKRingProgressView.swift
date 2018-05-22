@@ -133,29 +133,42 @@ open class MKRingProgressView: UIView {
     private var ringProgressLayer: MKRingProgressLayer {
         return layer as! MKRingProgressLayer
     }
-    
+
+    public override init(frame: CGRect) {
+        super.init(frame: frame)
+        setup()
+    }
+
+    public required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        setup()
+    }
+
+    init() {
+        super.init(frame: .zero)
+        setup()
+    }
+
+    private func setup() {
+        isAccessibilityElement = true
+        accessibilityTraits = UIAccessibilityTraitUpdatesFrequently
+        accessibilityLabel = "Ring progress"
+    }
+
     // Accessibility for individual rings
-    
-    /// A unique string descriptor for the ring that is also used for accessibility.
-    @objc open var identifier: String? {
-        didSet {
-            accessibilityIdentifier = identifier
+
+    private var overriddenAccessibilityValue: String?
+
+    open override var accessibilityValue: String? {
+        get {
+            if let override = overriddenAccessibilityValue {
+                return override
+            }
+            return "\(progress * 100) %"
         }
-    }
-    
-    open override var isAccessibilityElement: Bool {
-        get { return true }
-        set { }
-    }
-    
-    open override var accessibilityFrame: CGRect {
-        get { return self.convert(bounds, to: UIScreen.main.coordinateSpace) }
-        set { }
-    }
-    
-    open override var accessibilityLabel: String? {
-        get { return "\(identifier ?? accessibilityIdentifier ?? "Ring"): \(self.progress * 100) %" }
-        set { }
+        set {
+            overriddenAccessibilityValue = newValue
+        }
     }
 }
 
