@@ -164,7 +164,7 @@ open class MKRingProgressView: UIView {
             if let override = overriddenAccessibilityValue {
                 return override
             }
-            return "\(progress * 100) %"
+            return String(format: "%.f%%", progress * 100)
         }
         set {
             overriddenAccessibilityValue = newValue
