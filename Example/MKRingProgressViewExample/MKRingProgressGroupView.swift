@@ -107,5 +107,4 @@ class MKRingProgressGroupView: UIView {
         ring3.frame = bounds.insetBy(dx: 2 * ringWidth + 2 * ringSpacing, dy: 2 * ringWidth + 2 * ringSpacing)
 
     }
-
 }
