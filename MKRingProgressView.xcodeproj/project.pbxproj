@@ -7,12 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5022C19A20B872EA0068B650 /* MKRingProgressLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5022C19920B872EA0068B650 /* MKRingProgressLayer.swift */; };
 		508526731E52FDC000D611F4 /* MKRingProgressView.h in Headers */ = {isa = PBXBuildFile; fileRef = 508526711E52FDC000D611F4 /* MKRingProgressView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5085267B1E52FE7800D611F4 /* MKGradientGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 508526791E52FE7800D611F4 /* MKGradientGenerator.swift */; };
 		5085267C1E52FE7800D611F4 /* MKRingProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5085267A1E52FE7800D611F4 /* MKRingProgressView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5022C19920B872EA0068B650 /* MKRingProgressLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MKRingProgressLayer.swift; sourceTree = "<group>"; };
 		5085266E1E52FDC000D611F4 /* MKRingProgressView.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MKRingProgressView.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		508526711E52FDC000D611F4 /* MKRingProgressView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MKRingProgressView.h; sourceTree = "<group>"; };
 		508526721E52FDC000D611F4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -52,6 +54,7 @@
 			children = (
 				508526711E52FDC000D611F4 /* MKRingProgressView.h */,
 				508526791E52FE7800D611F4 /* MKGradientGenerator.swift */,
+				5022C19920B872EA0068B650 /* MKRingProgressLayer.swift */,
 				5085267A1E52FE7800D611F4 /* MKRingProgressView.swift */,
 				508526721E52FDC000D611F4 /* Info.plist */,
 			);
@@ -139,6 +142,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5085267B1E52FE7800D611F4 /* MKGradientGenerator.swift in Sources */,
+				5022C19A20B872EA0068B650 /* MKRingProgressLayer.swift in Sources */,
 				5085267C1E52FE7800D611F4 /* MKRingProgressView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
