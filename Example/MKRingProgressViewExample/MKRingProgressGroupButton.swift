@@ -24,9 +24,9 @@ THE SOFTWARE.
 
 import UIKit
 
-class MKRingProgressGroupButton: UIButton {
+class RingProgressGroupButton: UIButton {
     
-    let contentView = MKRingProgressGroupView()
+    let contentView = RingProgressGroupView()
     
     let selectionIndicatorView = UIView(frame: CGRect(x: 0, y: 0, width: 20, height: 20))
     

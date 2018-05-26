@@ -26,11 +26,11 @@ import UIKit
 import MKRingProgressView
 
 @IBDesignable
-class MKRingProgressGroupView: UIView {
+class RingProgressGroupView: UIView {
 
-    let ring1 = MKRingProgressView()
-    let ring2 = MKRingProgressView()
-    let ring3 = MKRingProgressView()
+    let ring1 = RingProgressView()
+    let ring2 = RingProgressView()
+    let ring3 = RingProgressView()
     
     @IBInspectable var ring1StartColor: UIColor = .red {
         didSet {

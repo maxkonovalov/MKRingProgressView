@@ -9,14 +9,13 @@
 import UIKit
 
 class ViewController: UIViewController {
-    
-    
+
     @IBOutlet weak var groupContainerView: UIView!
-    @IBOutlet weak var progressGroup: MKRingProgressGroupView!
+    @IBOutlet weak var progressGroup: RingProgressGroupView!
     
     @IBOutlet weak var iconsHeightConstraint: NSLayoutConstraint!
     
-    var buttons = [MKRingProgressGroupButton]()
+    var buttons = [RingProgressGroupButton]()
     var selectedIndex = 0
     
     override func viewDidLoad() {
@@ -26,15 +25,15 @@ class ViewController: UIViewController {
         navigationController!.navigationBar.addSubview(containerView)
 
         // These are optional and only serve to improve accessibility
-        progressGroup.ring1.accessibilityLabel = "Move"
-        progressGroup.ring2.accessibilityLabel = "Exercise"
-        progressGroup.ring3.accessibilityLabel = "Stand"
+        progressGroup.ring1.accessibilityLabel = NSLocalizedString("Move", comment: "")
+        progressGroup.ring2.accessibilityLabel = NSLocalizedString("Exercise", comment: "")
+        progressGroup.ring3.accessibilityLabel = NSLocalizedString("Stand", comment: "")
 
         let n = 7
         for i in 0..<n {
             let w = (containerView.bounds.width - 16) / CGFloat(n)
             let h = containerView.bounds.height
-            let button = MKRingProgressGroupButton(frame: CGRect(x: 8 + CGFloat(i) * w, y: 0, width: w, height: h))
+            let button = RingProgressGroupButton(frame: CGRect(x: 8 + CGFloat(i) * w, y: 0, width: w, height: h))
             button.contentView.ringWidth = 4.5
             button.contentView.ringSpacing = 1
             button.contentView.ring1StartColor = progressGroup.ring1StartColor
@@ -50,22 +49,22 @@ class ViewController: UIViewController {
         
         buttons[0].isSelected = true
         
-        randomize()
-        
-        
-        delay(0.5) {
-            self.updateMainGroupProgress()
-        }
-        
+        updateButtonsProgress()
     }
-    
+
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        updateMainGroupProgress(delay: 0.5)
+    }
+
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         progressGroup.ringWidth = view.bounds.width * 0.08
         iconsHeightConstraint.constant = progressGroup.ringWidth * 3 + progressGroup.ringSpacing * 2
     }
     
-    @objc func buttonTapped(_ sender: MKRingProgressGroupButton) {
+    @objc func buttonTapped(_ sender: RingProgressGroupButton) {
         let newIndex = buttons.index(of: sender) ?? 0
         if newIndex == selectedIndex {
             return
@@ -79,44 +78,41 @@ class ViewController: UIViewController {
         
         UIView.animate(withDuration: 0.2, delay: 0.0, usingSpringWithDamping: 0.9, initialSpringVelocity: 0.0, options: [], animations: { () -> Void in
             self.groupContainerView.transform = CGAffineTransform(translationX: dx, y: 0)
-            }) { (_) -> Void in
-                self.groupContainerView.transform = CGAffineTransform(translationX: -dx, y: 0)
-                CATransaction.begin()
-                CATransaction.setAnimationDuration(0.0)
-                self.progressGroup.ring1.progress = 0.0
-                self.progressGroup.ring2.progress = 0.0
-                self.progressGroup.ring3.progress = 0.0
-                CATransaction.commit()
-                UIView.animate(withDuration: 0.3, delay: 0.0, usingSpringWithDamping: 0.9, initialSpringVelocity: 0.0, options: [], animations: { () -> Void in
-                    self.groupContainerView.transform = CGAffineTransform.identity
-                    }, completion: { (_) -> Void in
-                        self.updateMainGroupProgress()
-                })
+        }) { (_) -> Void in
+            self.groupContainerView.transform = CGAffineTransform(translationX: -dx, y: 0)
+            self.progressGroup.ring1.progress = 0.0
+            self.progressGroup.ring2.progress = 0.0
+            self.progressGroup.ring3.progress = 0.0
+            UIView.animate(withDuration: 0.3, delay: 0.0, usingSpringWithDamping: 0.9, initialSpringVelocity: 0.0, options: [], animations: { () -> Void in
+                self.groupContainerView.transform = CGAffineTransform.identity
+            }, completion: { (_) -> Void in
+                self.updateMainGroupProgress()
+            })
         }
     }
-    
-    private func updateMainGroupProgress() {
+
+    private func updateButtonsProgress() {
+        UIView.animate(withDuration: 0.5) {
+            for button in self.buttons {
+                button.contentView.ring1.progress = Double(arc4random() % 200) / 100.0
+                button.contentView.ring2.progress = Double(arc4random() % 200) / 100.0
+                button.contentView.ring3.progress = Double(arc4random() % 200) / 100.0
+            }
+        }
+    }
+
+    private func updateMainGroupProgress(delay: TimeInterval = 0.0) {
         let selectedGroup = buttons[selectedIndex]
-        CATransaction.begin()
-        CATransaction.setAnimationDuration(1.0)
-        self.progressGroup.ring1.progress = selectedGroup.contentView.ring1.progress
-        self.progressGroup.ring2.progress = selectedGroup.contentView.ring2.progress
-        self.progressGroup.ring3.progress = selectedGroup.contentView.ring3.progress
-        CATransaction.commit()
+        UIView.animate(withDuration: 1.0, delay: delay, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.0, options: [], animations: {
+            self.progressGroup.ring1.progress = selectedGroup.contentView.ring1.progress
+            self.progressGroup.ring2.progress = selectedGroup.contentView.ring2.progress
+            self.progressGroup.ring3.progress = selectedGroup.contentView.ring3.progress
+        }, completion: nil)
     }
     
     @IBAction func randomize(_ sender: AnyObject? = nil) {
-        for button in buttons {
-            button.contentView.ring1.progress = Double(arc4random() % 200) / 100.0
-            button.contentView.ring2.progress = Double(arc4random() % 200) / 100.0
-            button.contentView.ring3.progress = Double(arc4random() % 200) / 100.0
-        }
+        updateButtonsProgress()
         updateMainGroupProgress()
     }
-    
-    
-}
 
-func delay(_ delay: Double, closure: @escaping ()->()) {
-    DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(Int64(delay * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC), execute: closure)
 }

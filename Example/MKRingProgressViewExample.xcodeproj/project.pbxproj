@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5022C19720B803AB0068B650 /* Icon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5022C19620B803AB0068B650 /* Icon.swift */; };
 		5025B8921E52FF6F0018FA7D /* MKRingProgressView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5025B8911E52FF5D0018FA7D /* MKRingProgressView.framework */; };
 		5025B8941E52FFC90018FA7D /* MKRingProgressView.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5025B8911E52FF5D0018FA7D /* MKRingProgressView.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		508CBF7B1BD6C2C7008A3B4E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 508CBF7A1BD6C2C7008A3B4E /* AppDelegate.swift */; };
@@ -43,6 +44,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		5022C19620B803AB0068B650 /* Icon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Icon.swift; sourceTree = "<group>"; };
 		5025B88C1E52FF5D0018FA7D /* MKRingProgressView.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MKRingProgressView.xcodeproj; path = ../MKRingProgressView.xcodeproj; sourceTree = "<group>"; };
 		508CBF771BD6C2C7008A3B4E /* MKRingProgressViewExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MKRingProgressViewExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		508CBF7A1BD6C2C7008A3B4E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -98,6 +100,7 @@
 				50DEDC431BD7811E009C3882 /* MKRingProgressGroup */,
 				508CBF7A1BD6C2C7008A3B4E /* AppDelegate.swift */,
 				508CBF7C1BD6C2C7008A3B4E /* ViewController.swift */,
+				5022C19620B803AB0068B650 /* Icon.swift */,
 				508CBF7E1BD6C2C7008A3B4E /* Main.storyboard */,
 				508CBF831BD6C2C7008A3B4E /* LaunchScreen.storyboard */,
 				508CBF811BD6C2C7008A3B4E /* Assets.xcassets */,
@@ -148,7 +151,7 @@
 					508CBF761BD6C2C7008A3B4E = {
 						CreatedOnToolsVersion = 7.0.1;
 						DevelopmentTeam = W6H6A25BPW;
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 0930;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -208,6 +211,7 @@
 				508CBF7D1BD6C2C7008A3B4E /* ViewController.swift in Sources */,
 				508CBF7B1BD6C2C7008A3B4E /* AppDelegate.swift in Sources */,
 				508CBF951BD6DBC2008A3B4E /* MKRingProgressGroupButton.swift in Sources */,
+				5022C19720B803AB0068B650 /* Icon.swift in Sources */,
 				508CBF921BD6CA0C008A3B4E /* MKRingProgressGroupView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -339,12 +343,14 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = W6H6A25BPW;
 				INFOPLIST_FILE = MKRingProgressViewExample/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.maxkonovalov.MKRingProgressViewExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_COMPILATION_MODE = singlefile;
 				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
@@ -354,6 +360,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = W6H6A25BPW;
 				INFOPLIST_FILE = MKRingProgressViewExample/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
