@@ -33,14 +33,14 @@ open class RingProgressLayer: CALayer {
     /// The progress ring start color.
     @objc open var startColor = UIColor.red.cgColor {
         didSet {
-            setNeedsRedrawContents()
+            setNeedsDisplay()
         }
     }
     
     /// The progress ring end color.
     @objc open var endColor = UIColor.blue.cgColor {
         didSet {
-            setNeedsRedrawContents()
+            setNeedsDisplay()
         }
     }
     
@@ -54,7 +54,7 @@ open class RingProgressLayer: CALayer {
     /// The width of the progress ring.
     @objc open var ringWidth: CGFloat = 20 {
         didSet {
-            setNeedsRedrawContents()
+            setNeedsDisplay()
         }
     }
     
@@ -68,7 +68,7 @@ open class RingProgressLayer: CALayer {
     /// The opacity of the shadow under the progress end.
     @objc open var endShadowOpacity: CGFloat = 1.0 {
         didSet {
-            endShadowOpacity = min(max(endShadowOpacity, 0), 1)
+            endShadowOpacity = min(max(endShadowOpacity, 0.0), 1.0)
             setNeedsDisplay()
         }
     }
@@ -84,14 +84,16 @@ open class RingProgressLayer: CALayer {
     /// Use lower values for better performance and higher values for more precise gradients.
     @objc open var gradientImageScale: CGFloat = 1.0 {
         didSet {
-            setNeedsRedrawContents()
+            setNeedsDisplay()
         }
     }
     
     /// The current progress shown by the view.
     /// Values less than 0.0 are clamped. Values greater than 1.0 present multiple revolutions of the progress ring.
     @NSManaged public var progress: CGFloat
-    
+
+    private let gradientGenerator = GradientGenerator()
+
     override open static func needsDisplay(forKey key: String) -> Bool {
         if key == "progress" {
             return true
@@ -115,64 +117,23 @@ open class RingProgressLayer: CALayer {
         }
         return super.action(forKey: event)
     }
-    
-    override init() {
-        super.init()
-        setup()
-    }
-    
-    override init(layer: Any) {
-        super.init(layer: layer)
-        if let layer = layer as? RingProgressLayer {
-            self.progress = layer.progress
-        }
-        setup()
-    }
-    
-    required public init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        setup()
-    }
-    
-    private func setup() {
-        self.contentsScale = UIScreen.main.scale
-    }
-    
-    
-    private func setNeedsRedrawContents() {
-        _gradientImage = nil
-        setNeedsDisplay()
-    }
-    
+
     override open func display() {
         self.contents = contentImage()
     }
-    
-    private var _gradientImage: CGImage?
-    
-    private func gradientImage() -> CGImage {
-        if _gradientImage == nil {
-            let r = min(bounds.width, bounds.height)/2
-            let r2 = r - ringWidth/2
-            let s = Float(1.5 * ringWidth / (2 * .pi * r2))
-            _gradientImage = GradientGenerator.gradientImage(type: .conical,
-                                                             size: CGSize(width: r, height: r),
-                                                             colors: [endColor, endColor, startColor, startColor],
-                                                             locations: [0.0, s, (1.0 - s), 1.0],
-                                                             endPoint: CGPoint(x: 0.5 - CGFloat(2 * s), y: 1.0),
-                                                             scale: gradientImageScale)
-        }
-        return _gradientImage!
-    }
-    
+
     func contentImage() -> CGImage? {
         UIGraphicsBeginImageContextWithOptions(bounds.size, false, 0)
         guard let ctx = UIGraphicsGetCurrentContext() else {
             return nil
         }
-        
+
         ctx.setShouldAntialias(allowsAntialiasing)
         ctx.setAllowsAntialiasing(allowsAntialiasing)
+
+        let squareSize = min(bounds.width, bounds.height)
+        let squareRect = CGRect(x: (bounds.width - squareSize)/2, y: (bounds.height - squareSize)/2,
+                                width: squareSize, height: squareSize)
         
         let w = ringWidth
         let r = min(bounds.width, bounds.height)/2 - w/2
@@ -183,7 +144,7 @@ open class RingProgressLayer: CALayer {
         let minAngle = 1.1 * atan(0.5 * w / r)
         let maxAngle = 2 * .pi - 3 * minAngle - angleOffset
         
-        let circleRect = CGRect(x: bounds.width/2 - r, y: bounds.height/2 - r, width: 2*r, height: 2*r)
+        let circleRect = squareRect.insetBy(dx: w/2, dy: w/2)
         let circlePath = UIBezierPath(ovalIn: circleRect)
         
         let angle1 = angle > maxAngle ? maxAngle : angle
@@ -245,27 +206,42 @@ open class RingProgressLayer: CALayer {
         ctx.restoreGState()
         
         // Draw gradient arc
-        
-        ctx.saveGState()
-        
-        ctx.addPath(CGPath(__byStroking: arc1Path.cgPath,
-                           transform: nil,
-                           lineWidth: w,
-                           lineCap: progressStyle.lineCap,
-                           lineJoin: progressStyle.lineJoin,
-                           miterLimit: 0)!)
-        ctx.clip()
-        
-        // TODO: Detect same start/end color
-        ctx.draw(gradientImage(), in: circleRect.insetBy(dx: -w/2, dy: -w/2))
-        
-        ctx.restoreGState()
-        
-        ///////
+
+        if startColor === endColor {
+            ctx.setStrokeColor(startColor)
+            ctx.setLineWidth(w)
+            ctx.setLineCap(progressStyle.lineCap)
+            ctx.addPath(arc1Path.cgPath)
+            ctx.strokePath()
+        } else {
+            ctx.saveGState()
+
+            ctx.addPath(CGPath(__byStroking: arc1Path.cgPath,
+                               transform: nil,
+                               lineWidth: w,
+                               lineCap: progressStyle.lineCap,
+                               lineJoin: progressStyle.lineJoin,
+                               miterLimit: 0)!)
+            ctx.clip()
+
+            let gradientRect = squareRect.integral
+            let s = Float(1.5 * w / (2 * .pi * r))
+            gradientGenerator.scale = gradientImageScale
+            gradientGenerator.size = gradientRect.size
+            gradientGenerator.colors = [endColor, endColor, startColor, startColor]
+            gradientGenerator.locations = [0.0, s, (1.0 - s), 1.0]
+            gradientGenerator.endPoint = CGPoint(x: 0.5 - CGFloat(2 * s), y: 1.0)
+            let gradient = gradientGenerator.image()
+
+            ctx.interpolationQuality = .none
+            ctx.draw(gradient, in: gradientRect)
+
+            ctx.restoreGState()
+        }
         
         let img = UIGraphicsGetImageFromCurrentImageContext()!.cgImage!
         UIGraphicsEndImageContext()
-        
+
         return img
     }
     

@@ -158,6 +158,7 @@ open class RingProgressView: UIView {
     }
     
     private func setup() {
+        layer.contentsScale = UIScreen.main.scale
         isAccessibilityElement = true
         accessibilityTraits = UIAccessibilityTraitUpdatesFrequently
         accessibilityLabel = "Ring progress"
