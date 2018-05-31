@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="EuA-Ne-n8G">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="EuA-Ne-n8G">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -23,10 +23,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1B7-50-OvD">
-                                <rect key="frame" x="50" y="196" width="275" height="275"/>
+                                <rect key="frame" x="37.5" y="183.5" width="300" height="300"/>
                                 <subviews>
                                     <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DIS-Q2-jEr" customClass="RingProgressGroupView" customModule="MKRingProgressViewExample" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="0.0" width="275" height="275"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="300" height="300"/>
                                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="DIS-Q2-jEr" secondAttribute="height" multiplier="1:1" id="QOf-IP-cAz"/>
@@ -59,7 +59,7 @@
                                         </userDefinedRuntimeAttributes>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hZS-0k-xaL" userLabel="Icons View">
-                                        <rect key="frame" x="127.5" y="0.0" width="20" height="94"/>
+                                        <rect key="frame" x="140" y="0.0" width="20" height="94"/>
                                         <subviews>
                                             <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon1" translatesAutoresizingMaskIntoConstraints="NO" id="Xmf-QL-oEC">
                                                 <rect key="frame" x="0.0" y="0.0" width="20" height="30"/>
@@ -96,6 +96,7 @@
                                     <constraint firstAttribute="trailing" secondItem="DIS-Q2-jEr" secondAttribute="trailing" id="9wN-f0-ztj"/>
                                     <constraint firstItem="DIS-Q2-jEr" firstAttribute="top" secondItem="1B7-50-OvD" secondAttribute="top" id="KBx-zM-ONM"/>
                                     <constraint firstItem="DIS-Q2-jEr" firstAttribute="leading" secondItem="1B7-50-OvD" secondAttribute="leading" id="nEi-kA-En1"/>
+                                    <constraint firstAttribute="width" relation="lessThanOrEqual" constant="300" id="rh0-6Z-o2x"/>
                                     <constraint firstAttribute="bottom" secondItem="DIS-Q2-jEr" secondAttribute="bottom" id="yMg-bP-AJI"/>
                                 </constraints>
                             </view>
@@ -115,10 +116,11 @@
                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="fq2-ao-3yC" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="0YN-5Y-gM1"/>
+                            <constraint firstItem="1B7-50-OvD" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="5Ta-F1-UTR"/>
                             <constraint firstItem="1B7-50-OvD" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="AWY-j5-QML"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="fq2-ao-3yC" secondAttribute="bottom" id="CUm-oT-16R"/>
-                            <constraint firstAttribute="trailing" secondItem="1B7-50-OvD" secondAttribute="trailing" constant="50" id="lfg-ak-BgD"/>
-                            <constraint firstItem="1B7-50-OvD" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="50" id="mAo-uS-XV3"/>
+                            <constraint firstAttribute="trailing" secondItem="1B7-50-OvD" secondAttribute="trailing" priority="750" constant="20" id="lfg-ak-BgD"/>
+                            <constraint firstItem="1B7-50-OvD" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" priority="750" constant="20" id="mAo-uS-XV3"/>
                             <constraint firstAttribute="trailing" secondItem="fq2-ao-3yC" secondAttribute="trailing" id="wb6-0K-mn9"/>
                         </constraints>
                     </view>

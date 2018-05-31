@@ -46,9 +46,9 @@ class ViewController: UIViewController {
             buttons.append(button)
             button.addTarget(self, action: #selector(ViewController.buttonTapped(_:)), for: .touchUpInside)
         }
-        
+
         buttons[0].isSelected = true
-        
+
         updateButtonsProgress()
     }
 
@@ -60,7 +60,6 @@ class ViewController: UIViewController {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        progressGroup.ringWidth = view.bounds.width * 0.08
         iconsHeightConstraint.constant = progressGroup.ringWidth * 3 + progressGroup.ringSpacing * 2
     }
     
