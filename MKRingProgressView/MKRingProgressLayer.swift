@@ -24,9 +24,6 @@
 
 import UIKit
 
-@available(*, unavailable, renamed: "RingProgressLayer")
-public final class MKRingProgressLayer {}
-
 @objc(MKRingProgressLayer)
 open class RingProgressLayer: CALayer {
     

@@ -30,9 +30,6 @@ public enum RingProgressViewStyle: Int {
     case square
 }
 
-@available(*, unavailable, renamed: "RingProgressView")
-public final class MKRingProgressView {}
-
 @IBDesignable
 @objc(MKRingProgressView)
 open class RingProgressView: UIView {
