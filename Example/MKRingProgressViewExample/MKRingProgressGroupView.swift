@@ -97,7 +97,6 @@ class RingProgressGroupView: UIView {
         addSubview(ring1)
         addSubview(ring2)
         addSubview(ring3)
-
     }
     
     override func layoutSubviews() {
@@ -105,6 +104,5 @@ class RingProgressGroupView: UIView {
         ring1.frame = bounds
         ring2.frame = bounds.insetBy(dx: ringWidth + ringSpacing, dy: ringWidth + ringSpacing)
         ring3.frame = bounds.insetBy(dx: 2 * ringWidth + 2 * ringSpacing, dy: 2 * ringWidth + 2 * ringSpacing)
-
     }
 }

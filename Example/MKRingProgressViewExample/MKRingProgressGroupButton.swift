@@ -47,7 +47,6 @@ class RingProgressGroupButton: UIButton {
     }
     
     private func setup() {
-        
         selectionIndicatorView.isUserInteractionEnabled = false
         selectionIndicatorView.backgroundColor = .clear
         selectionIndicatorView.layer.masksToBounds = false
@@ -60,7 +59,6 @@ class RingProgressGroupButton: UIButton {
         
         contentView.isUserInteractionEnabled = false
         addSubview(contentView)
-        
     }
 
     override func layoutSubviews() {

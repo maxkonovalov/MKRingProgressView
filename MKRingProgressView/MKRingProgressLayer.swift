@@ -148,7 +148,11 @@ open class RingProgressLayer: CALayer {
         let circlePath = UIBezierPath(ovalIn: circleRect)
 
         let angle1 = angle > maxAngle ? maxAngle : angle
-        let arc1Path = UIBezierPath(arcCenter: c, radius: r, startAngle: -angleOffset, endAngle: angle1, clockwise: true)
+        let arc1Path = UIBezierPath(arcCenter: c,
+                                    radius: r,
+                                    startAngle: -angleOffset,
+                                    endAngle: angle1,
+                                    clockwise: true)
 
         ctx.setLineWidth(w)
         ctx.setLineCap(progressStyle.lineCap)
@@ -165,7 +169,11 @@ open class RingProgressLayer: CALayer {
         if angle > maxAngle {
             let offset = angle - maxAngle
 
-            let arc2Path = UIBezierPath(arcCenter: c, radius: r, startAngle: -angleOffset, endAngle: offset, clockwise: true)
+            let arc2Path = UIBezierPath(arcCenter: c,
+                                        radius: r,
+                                        startAngle: -angleOffset,
+                                        endAngle: offset,
+                                        clockwise: true)
             ctx.addPath(arc2Path.cgPath)
             ctx.setStrokeColor(startColor)
             ctx.strokePath()
@@ -177,38 +185,49 @@ open class RingProgressLayer: CALayer {
 
         // Draw shadow
 
-        ctx.saveGState()
+        if endShadowOpacity > 0.0 {
+            ctx.saveGState()
 
-        ctx.addPath(CGPath(__byStroking: circlePath.cgPath,
-                           transform: nil,
-                           lineWidth: w,
-                           lineCap: .round,
-                           lineJoin: .round,
-                           miterLimit: 0)!)
-        ctx.clip()
+            ctx.addPath(CGPath(__byStroking: circlePath.cgPath,
+                               transform: nil,
+                               lineWidth: w,
+                               lineCap: .round,
+                               lineJoin: .round,
+                               miterLimit: 0)!)
+            ctx.clip()
 
-        let shadowOffset = CGSize(width: w / 10 * cos(angle + angleOffset), height: w / 10 * sin(angle + angleOffset))
-        ctx.setShadow(offset: shadowOffset, blur: w / 3, color: UIColor(white: 0.0, alpha: endShadowOpacity).cgColor)
-        let arcEnd = CGPoint(x: c.x + r * cos(angle1), y: c.y + r * sin(angle1))
+            let shadowOffset = CGSize(width: w / 10 * cos(angle + angleOffset),
+                                      height: w / 10 * sin(angle + angleOffset))
+            ctx.setShadow(offset: shadowOffset,
+                          blur: w / 3,
+                          color: UIColor(white: 0.0, alpha: endShadowOpacity).cgColor)
+            let arcEnd = CGPoint(x: c.x + r * cos(angle1), y: c.y + r * sin(angle1))
 
-        let shadowPath: UIBezierPath = {
-            switch progressStyle {
-            case .round:
-                return UIBezierPath(ovalIn: CGRect(x: arcEnd.x - w / 2, y: arcEnd.y - w / 2, width: w, height: w))
-            case .square:
-                let path = UIBezierPath(rect: CGRect(x: arcEnd.x - w / 2, y: arcEnd.y - 2, width: w, height: 2))
-                path.apply(CGAffineTransform(translationX: -arcEnd.x, y: -arcEnd.y))
-                path.apply(CGAffineTransform(rotationAngle: angle1))
-                path.apply(CGAffineTransform(translationX: arcEnd.x, y: arcEnd.y))
-                return path
-            }
-        }()
+            let shadowPath: UIBezierPath = {
+                switch progressStyle {
+                case .round:
+                    return UIBezierPath(ovalIn: CGRect(x: arcEnd.x - w / 2,
+                                                       y: arcEnd.y - w / 2,
+                                                       width: w,
+                                                       height: w))
+                case .square:
+                    let path = UIBezierPath(rect: CGRect(x: arcEnd.x - w / 2,
+                                                         y: arcEnd.y - 2,
+                                                         width: w,
+                                                         height: 2))
+                    path.apply(CGAffineTransform(translationX: -arcEnd.x, y: -arcEnd.y))
+                    path.apply(CGAffineTransform(rotationAngle: angle1))
+                    path.apply(CGAffineTransform(translationX: arcEnd.x, y: arcEnd.y))
+                    return path
+                }
+            }()
 
-        ctx.addPath(shadowPath.cgPath)
-        ctx.setFillColor(startColor)
-        ctx.fillPath()
+            ctx.addPath(shadowPath.cgPath)
+            ctx.setFillColor(startColor)
+            ctx.fillPath()
 
-        ctx.restoreGState()
+            ctx.restoreGState()
+        }
 
         // Draw gradient arc
 
