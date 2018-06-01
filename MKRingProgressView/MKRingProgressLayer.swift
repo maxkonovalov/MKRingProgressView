@@ -153,8 +153,8 @@ open class RingProgressLayer: CALayer {
         // Draw backdrop circle
         
         ctx.addPath(circlePath.cgPath)
-        let bgColor = backgroundRingColor ?? startColor.copy(alpha: 0.15)
-        ctx.setStrokeColor(bgColor!)
+        let bgColor = backgroundRingColor ?? startColor.copy(alpha: 0.15)!
+        ctx.setStrokeColor(bgColor)
         ctx.strokePath()
         
         // Draw solid arc
@@ -235,8 +235,8 @@ open class RingProgressLayer: CALayer {
 
             ctx.restoreGState()
         }
-        
-        let img = UIGraphicsGetImageFromCurrentImageContext()!.cgImage!
+
+        let img = UIGraphicsGetImageFromCurrentImageContext()?.cgImage
         UIGraphicsEndImageContext()
 
         return img
