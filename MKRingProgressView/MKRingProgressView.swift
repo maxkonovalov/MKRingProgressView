@@ -111,7 +111,7 @@ open class RingProgressView: UIView {
 
     /// The scale of the generated gradient image.
     /// Use lower values for better performance and higher values for more precise gradients.
-    @objc open var gradientImageScale: CGFloat {
+    @IBInspectable open var gradientImageScale: CGFloat {
         get {
             return ringProgressLayer.gradientImageScale
         }
@@ -122,7 +122,7 @@ open class RingProgressView: UIView {
 
     /// The progress. Can be any nonnegative number, every whole number corresponding to one full revolution, i.e. 1.0 -> 360°, 2.0 -> 720°, etc. Defaults to `0.0`.
     /// Progress animation duration can be adjusted using `CATransaction.setAnimationDuration()`.
-    @objc open var progress: Double {
+    @IBInspectable open var progress: Double {
         get {
             return Double(ringProgressLayer.progress)
         }
@@ -159,6 +159,11 @@ open class RingProgressView: UIView {
         isAccessibilityElement = true
         accessibilityTraits = UIAccessibilityTraitUpdatesFrequently
         accessibilityLabel = "Ring progress"
+    }
+
+    open override func prepareForInterfaceBuilder() {
+        super.prepareForInterfaceBuilder()
+        ringProgressLayer.disableProgressAnimation = true
     }
 
     // MARK: Accessibility

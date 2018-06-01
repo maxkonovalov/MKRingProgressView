@@ -89,6 +89,9 @@ open class RingProgressLayer: CALayer {
     /// Values less than 0.0 are clamped. Values greater than 1.0 present multiple revolutions of the progress ring.
     @NSManaged public var progress: CGFloat
 
+    /// Disable actions for `progress` property.
+    internal var disableProgressAnimation: Bool = false
+
     private let gradientGenerator = GradientGenerator()
 
     open override static func needsDisplay(forKey key: String) -> Bool {
@@ -99,7 +102,7 @@ open class RingProgressLayer: CALayer {
     }
 
     open override func action(forKey event: String) -> CAAction? {
-        if event == "progress" {
+        if !disableProgressAnimation && event == "progress" {
             if let action = super.action(forKey: "opacity") as? CABasicAnimation {
                 let animation = action.copy() as! CABasicAnimation
                 animation.keyPath = event
@@ -132,10 +135,10 @@ open class RingProgressLayer: CALayer {
         let squareRect = CGRect(x: (bounds.width - squareSize) / 2, y: (bounds.height - squareSize) / 2,
                                 width: squareSize, height: squareSize)
 
-        let w = ringWidth
+        let w = min(ringWidth, squareSize / 2)
         let r = min(bounds.width, bounds.height) / 2 - w / 2
         let c = CGPoint(x: bounds.width / 2, y: bounds.height / 2)
-        let p = max(0.0, presentation()?.progress ?? 0.0)
+        let p = max(0.0, disableProgressAnimation ? progress : presentation()?.progress ?? 0.0)
         let angleOffset = CGFloat.pi / 2
         let angle = 2 * .pi * p - angleOffset
         let minAngle = 1.1 * atan(0.5 * w / r)
