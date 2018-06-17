@@ -94,7 +94,7 @@ open class RingProgressLayer: CALayer {
 
     private let gradientGenerator = GradientGenerator()
 
-    open override static func needsDisplay(forKey key: String) -> Bool {
+    open override class func needsDisplay(forKey key: String) -> Bool {
         if key == "progress" {
             return true
         }
