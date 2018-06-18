@@ -1,18 +1,18 @@
 /*
  The MIT License (MIT)
- 
+
  Copyright (c) 2015 Max Konovalov
- 
+
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
  in the Software without restriction, including without limitation the rights
  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  copies of the Software, and to permit persons to whom the Software is
  furnished to do so, subject to the following conditions:
- 
+
  The above copyright notice and this permission notice shall be included in
  all copies or substantial portions of the Software.
- 
+
  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -91,7 +91,7 @@ internal final class GradientGenerator {
         let bytesPerPixel: Int = bitsPerComponent * 4 / 8
 
         var data = [ARGB]()
-        
+
         for y in 0..<h {
             for x in 0..<w {
                 let c = pixelDataForGradient(at: CGPoint(x: x, y: y),
@@ -106,7 +106,7 @@ internal final class GradientGenerator {
 
         let colorSpace = CGColorSpaceCreateDeviceRGB()
         let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.premultipliedFirst.rawValue)
-        
+
         let ctx = CGContext(data: &data, width: w, height: h, bitsPerComponent: bitsPerComponent, bytesPerRow: w * bytesPerPixel, space: colorSpace, bitmapInfo: bitmapInfo.rawValue)!
         ctx.interpolationQuality = .none
         ctx.setShouldAntialias(false)
@@ -114,7 +114,7 @@ internal final class GradientGenerator {
         generatedImage = img
         return img
     }
-    
+
     private func pixelDataForGradient(at point: CGPoint,
                                       size: CGSize,
                                       colors: [CGColor],
@@ -124,7 +124,7 @@ internal final class GradientGenerator {
         let t = conicalGradientStop(point, size, startPoint, endPoint)
         return interpolatedColor(t, colors, locations)
     }
-    
+
     private func conicalGradientStop(_ point: CGPoint, _ size: CGSize, _ g0: CGPoint, _ g1: CGPoint) -> Float {
         let c = CGPoint(x: size.width * g0.x, y: size.height * g0.y)
         let s = CGPoint(x: size.width * (g1.x - g0.x), y: size.height * (g1.y - g0.y))
@@ -137,17 +137,17 @@ internal final class GradientGenerator {
         let t = a / (2 * .pi)
         return Float(t)
     }
-    
+
     private func interpolatedColor(_ t: Float, _ colors: [CGColor], _ locations: [Float]) -> ARGB {
         assert(!colors.isEmpty)
         assert(colors.count == locations.count)
-        
+
         var p0: Float = 0
         var p1: Float = 1
-        
+
         var c0 = colors.first!
         var c1 = colors.last!
-        
+
         for (i, v) in locations.enumerated() {
             if v > p0 && t >= v {
                 p0 = v
@@ -158,22 +158,21 @@ internal final class GradientGenerator {
                 c1 = colors[i]
             }
         }
-        
+
         let p: Float
         if p0 == p1 {
             p = 0
         } else {
             p = lerp(t, inRange: p0...p1, outRange: 0...1)
         }
-        
+
         let color0 = ARGB(c0)
         let color1 = ARGB(c1)
-        
+
         return color0.interpolateTo(color1, p)
     }
-    
-}
 
+}
 
 // MARK: - Color Data
 
@@ -203,14 +202,14 @@ extension ARGB {
             self.init(r: 0, g: 0, b: 0)
         }
     }
-    
+
     func interpolateTo(_ color: ARGB, _ t: Float) -> ARGB {
         let r = lerp(t, self.r, color.r)
         let g = lerp(t, self.g, color.g)
         let b = lerp(t, self.b, color.b)
         return ARGB(r: r, g: g, b: b)
     }
-    
+
 }
 
 // MARK: - Utility
