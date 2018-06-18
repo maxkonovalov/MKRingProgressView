@@ -155,6 +155,7 @@ open class RingProgressView: UIView {
     }
 
     private func setup() {
+        layer.drawsAsynchronously = true
         layer.contentsScale = UIScreen.main.scale
         isAccessibilityElement = true
         accessibilityTraits = UIAccessibilityTraitUpdatesFrequently
