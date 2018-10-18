@@ -34,6 +34,16 @@ public enum RingProgressViewStyle: Int {
 @objc(MKRingProgressView)
 open class RingProgressView: UIView {
 
+    /// Hide the progress ring if progress is 0.0. This will still display the backdrop circle. Defaults to `false`
+    @IBInspectable open var hideIfNoProgress: Bool {
+        get {
+            return ringProgressLayer.hideIfNoProgress
+        }
+        set {
+            ringProgressLayer.hideIfNoProgress = newValue
+        }
+    }
+    
     /// The start color of the progress ring.
     @IBInspectable open var startColor: UIColor {
         get {
