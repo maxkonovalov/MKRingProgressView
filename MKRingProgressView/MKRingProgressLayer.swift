@@ -28,7 +28,7 @@ import UIKit
 open class RingProgressLayer: CALayer {
 
     ///Do not show progress ring if progress is 0.0
-    @objc open var hideIfNoProgress = false {
+    @objc open var hideShadowIfNoProgress = false {
         didSet {
             setNeedsDisplay()
         }
@@ -190,7 +190,7 @@ open class RingProgressLayer: CALayer {
 
         // Draw shadow
 
-        if endShadowOpacity > 0.0 && (!hideIfNoProgress || p > 0.0) {
+        if endShadowOpacity > 0.0 && (!hideShadowIfNoProgress || p > 0.0) {
             ctx.saveGState()
 
             ctx.addPath(CGPath(__byStroking: circlePath.cgPath,
