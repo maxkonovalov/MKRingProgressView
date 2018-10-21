@@ -33,7 +33,6 @@ public enum RingProgressViewStyle: Int {
 @IBDesignable
 @objc(MKRingProgressView)
 open class RingProgressView: UIView {
-
     /// The start color of the progress ring.
     @IBInspectable open var startColor: UIColor {
         get {
@@ -96,6 +95,16 @@ open class RingProgressView: UIView {
         }
         set {
             ringProgressLayer.endShadowOpacity = newValue
+        }
+    }
+
+    /// Whether or not to hide the progress ring when progress is zero. Defaults to `false`.
+    @IBInspectable open var hidesRingForZeroProgress: Bool {
+        get {
+            return ringProgressLayer.hidesRingForZeroProgress
+        }
+        set {
+            ringProgressLayer.hidesRingForZeroProgress = newValue
         }
     }
 
@@ -186,5 +195,4 @@ open class RingProgressView: UIView {
             overriddenAccessibilityValue = newValue
         }
     }
-
 }
