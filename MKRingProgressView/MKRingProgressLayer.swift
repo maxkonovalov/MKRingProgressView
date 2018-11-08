@@ -129,171 +129,187 @@ open class RingProgressLayer: CALayer {
     }
 
     func contentImage() -> CGImage? {
-        UIGraphicsBeginImageContextWithOptions(bounds.size, false, 0)
-        guard let ctx = UIGraphicsGetCurrentContext() else {
-            return nil
-        }
-
-        ctx.setShouldAntialias(allowsAntialiasing)
-        ctx.setAllowsAntialiasing(allowsAntialiasing)
-
-        let useGradient = startColor !== endColor
-
-        let squareSize = min(bounds.width, bounds.height)
-        let squareRect = CGRect(x: (bounds.width - squareSize) / 2, y: (bounds.height - squareSize) / 2,
-                                width: squareSize, height: squareSize)
-        let gradientRect = squareRect.integral
-
-        let w = min(ringWidth, squareSize / 2)
-        let r = min(bounds.width, bounds.height) / 2 - w / 2
-        let c = CGPoint(x: bounds.width / 2, y: bounds.height / 2)
-        let p = max(0.0, disableProgressAnimation ? progress : presentation()?.progress ?? 0.0)
-        let angleOffset = CGFloat.pi / 2
-        let angle = 2 * .pi * p - angleOffset
-        let minAngle = 1.1 * atan(0.5 * w / r)
-        let maxAngle = 2 * .pi - 3 * minAngle - angleOffset
-
-        let circleRect = squareRect.insetBy(dx: w / 2, dy: w / 2)
-        let circlePath = UIBezierPath(ovalIn: circleRect)
-
-        let angle1 = angle > maxAngle ? maxAngle : angle
-
-        ctx.setLineWidth(w)
-        ctx.setLineCap(progressStyle.lineCap)
-
-        // Draw backdrop circle
-
-        ctx.addPath(circlePath.cgPath)
-        let bgColor = backgroundRingColor ?? startColor.copy(alpha: 0.15)!
-        ctx.setStrokeColor(bgColor)
-        ctx.strokePath()
-
-        // Draw solid arc
-
-        if angle > maxAngle {
-            let offset = angle - maxAngle
-
-            let arc2Path = UIBezierPath(arcCenter: c,
-                                        radius: r,
-                                        startAngle: -angleOffset,
-                                        endAngle: offset,
-                                        clockwise: true)
-            ctx.addPath(arc2Path.cgPath)
-            ctx.setStrokeColor(startColor)
+        
+        func draw(in ctx: CGContext) {
+            ctx.setShouldAntialias(allowsAntialiasing)
+            ctx.setAllowsAntialiasing(allowsAntialiasing)
+            
+            let useGradient = startColor !== endColor
+            
+            let squareSize = min(bounds.width, bounds.height)
+            let squareRect = CGRect(x: (bounds.width - squareSize) / 2, y: (bounds.height - squareSize) / 2,
+                                    width: squareSize, height: squareSize)
+            let gradientRect = squareRect.integral
+            
+            let w = min(ringWidth, squareSize / 2)
+            let r = min(bounds.width, bounds.height) / 2 - w / 2
+            let c = CGPoint(x: bounds.width / 2, y: bounds.height / 2)
+            let p = max(0.0, disableProgressAnimation ? progress : presentation()?.progress ?? 0.0)
+            let angleOffset = CGFloat.pi / 2
+            let angle = 2 * .pi * p - angleOffset
+            let minAngle = 1.1 * atan(0.5 * w / r)
+            let maxAngle = 2 * .pi - 3 * minAngle - angleOffset
+            
+            let circleRect = squareRect.insetBy(dx: w / 2, dy: w / 2)
+            let circlePath = UIBezierPath(ovalIn: circleRect)
+            
+            let angle1 = angle > maxAngle ? maxAngle : angle
+            
+            ctx.setLineWidth(w)
+            ctx.setLineCap(progressStyle.lineCap)
+            
+            // Draw backdrop circle
+            
+            ctx.addPath(circlePath.cgPath)
+            let bgColor = backgroundRingColor ?? startColor.copy(alpha: 0.15)!
+            ctx.setStrokeColor(bgColor)
             ctx.strokePath()
-
-            ctx.translateBy(x: circleRect.midX, y: circleRect.midY)
-            ctx.rotate(by: offset)
-            ctx.translateBy(x: -circleRect.midX, y: -circleRect.midY)
-        }
-
-        // Draw shadow and progress end
-
-        if p > 0.0 || !hidesRingForZeroProgress {
-            ctx.saveGState()
-
-            if endShadowOpacity > 0.0 {
-                ctx.addPath(CGPath(__byStroking: circlePath.cgPath,
-                                   transform: nil,
-                                   lineWidth: w,
-                                   lineCap: .round,
-                                   lineJoin: .round,
-                                   miterLimit: 0)!)
-                ctx.clip()
-
-                let shadowOffset = CGSize(width: w / 10 * cos(angle + angleOffset),
-                                          height: w / 10 * sin(angle + angleOffset))
-                ctx.setShadow(offset: shadowOffset,
-                              blur: w / 3,
-                              color: UIColor(white: 0.0, alpha: endShadowOpacity).cgColor)
+            
+            // Draw solid arc
+            
+            if angle > maxAngle {
+                let offset = angle - maxAngle
+                
+                let arc2Path = UIBezierPath(arcCenter: c,
+                                            radius: r,
+                                            startAngle: -angleOffset,
+                                            endAngle: offset,
+                                            clockwise: true)
+                ctx.addPath(arc2Path.cgPath)
+                ctx.setStrokeColor(startColor)
+                ctx.strokePath()
+                
+                ctx.translateBy(x: circleRect.midX, y: circleRect.midY)
+                ctx.rotate(by: offset)
+                ctx.translateBy(x: -circleRect.midX, y: -circleRect.midY)
             }
-
-            let arcEnd = CGPoint(x: c.x + r * cos(angle1), y: c.y + r * sin(angle1))
-
-            let shadowPath: UIBezierPath = {
-                switch progressStyle {
-                case .round:
-                    return UIBezierPath(ovalIn: CGRect(x: arcEnd.x - w / 2,
-                                                       y: arcEnd.y - w / 2,
-                                                       width: w,
-                                                       height: w))
-                case .square:
-                    let path = UIBezierPath(rect: CGRect(x: arcEnd.x - w / 2,
-                                                         y: arcEnd.y - 2,
-                                                         width: w,
-                                                         height: 2))
-                    path.apply(CGAffineTransform(translationX: -arcEnd.x, y: -arcEnd.y))
-                    path.apply(CGAffineTransform(rotationAngle: angle1))
-                    path.apply(CGAffineTransform(translationX: arcEnd.x, y: arcEnd.y))
-                    return path
+            
+            // Draw shadow and progress end
+            
+            if p > 0.0 || !hidesRingForZeroProgress {
+                ctx.saveGState()
+                
+                if endShadowOpacity > 0.0 {
+                    ctx.addPath(CGPath(__byStroking: circlePath.cgPath,
+                                       transform: nil,
+                                       lineWidth: w,
+                                       lineCap: .round,
+                                       lineJoin: .round,
+                                       miterLimit: 0)!)
+                    ctx.clip()
+                    
+                    let shadowOffset = CGSize(width: w / 10 * cos(angle + angleOffset),
+                                              height: w / 10 * sin(angle + angleOffset))
+                    ctx.setShadow(offset: shadowOffset,
+                                  blur: w / 3,
+                                  color: UIColor(white: 0.0, alpha: endShadowOpacity).cgColor)
                 }
-            }()
-
-            let shadowFillColor: CGColor = {
-                let fadeStartProgress: CGFloat = 0.02
-                if !hidesRingForZeroProgress || p > fadeStartProgress {
-                    return startColor
+                
+                let arcEnd = CGPoint(x: c.x + r * cos(angle1), y: c.y + r * sin(angle1))
+                
+                let shadowPath: UIBezierPath = {
+                    switch progressStyle {
+                    case .round:
+                        return UIBezierPath(ovalIn: CGRect(x: arcEnd.x - w / 2,
+                                                           y: arcEnd.y - w / 2,
+                                                           width: w,
+                                                           height: w))
+                    case .square:
+                        let path = UIBezierPath(rect: CGRect(x: arcEnd.x - w / 2,
+                                                             y: arcEnd.y - 2,
+                                                             width: w,
+                                                             height: 2))
+                        path.apply(CGAffineTransform(translationX: -arcEnd.x, y: -arcEnd.y))
+                        path.apply(CGAffineTransform(rotationAngle: angle1))
+                        path.apply(CGAffineTransform(translationX: arcEnd.x, y: arcEnd.y))
+                        return path
+                    }
+                }()
+                
+                let shadowFillColor: CGColor = {
+                    let fadeStartProgress: CGFloat = 0.02
+                    if !hidesRingForZeroProgress || p > fadeStartProgress {
+                        return startColor
+                    }
+                    // gradually decrease shadow opacity
+                    return startColor.copy(alpha: p / fadeStartProgress)!
+                }()
+                ctx.addPath(shadowPath.cgPath)
+                ctx.setFillColor(shadowFillColor)
+                ctx.fillPath()
+                
+                ctx.restoreGState()
+            }
+            
+            // Draw gradient arc
+            
+            let gradient: CGImage? = {
+                guard useGradient else {
+                    return nil
                 }
-                // gradually decrease shadow opacity
-                return startColor.copy(alpha: p / fadeStartProgress)!
+                let s = Float(1.5 * w / (2 * .pi * r))
+                gradientGenerator.scale = gradientImageScale
+                gradientGenerator.size = gradientRect.size
+                gradientGenerator.colors = [endColor, endColor, startColor, startColor]
+                gradientGenerator.locations = [0.0, s, (1.0 - s), 1.0]
+                gradientGenerator.endPoint = CGPoint(x: 0.5 - CGFloat(2 * s), y: 1.0)
+                return gradientGenerator.image()
             }()
-            ctx.addPath(shadowPath.cgPath)
-            ctx.setFillColor(shadowFillColor)
-            ctx.fillPath()
-
-            ctx.restoreGState()
+            
+            if p > 0.0 {
+                let arc1Path = UIBezierPath(arcCenter: c,
+                                            radius: r,
+                                            startAngle: -angleOffset,
+                                            endAngle: angle1,
+                                            clockwise: true)
+                if let gradient = gradient {
+                    ctx.saveGState()
+                    
+                    ctx.addPath(CGPath(__byStroking: arc1Path.cgPath,
+                                       transform: nil,
+                                       lineWidth: w,
+                                       lineCap: progressStyle.lineCap,
+                                       lineJoin: progressStyle.lineJoin,
+                                       miterLimit: 0)!)
+                    ctx.clip()
+                    
+                    ctx.interpolationQuality = .none
+                    ctx.draw(gradient, in: gradientRect)
+                    
+                    ctx.restoreGState()
+                } else {
+                    ctx.setStrokeColor(startColor)
+                    ctx.setLineWidth(w)
+                    ctx.setLineCap(progressStyle.lineCap)
+                    ctx.addPath(arc1Path.cgPath)
+                    ctx.strokePath()
+                }
+            }
         }
-
-        // Draw gradient arc
-
-        let gradient: CGImage? = {
-            guard useGradient else {
+        
+        if #available(iOS 10.0, *) {
+            let format = UIGraphicsImageRendererFormat()
+            format.scale = UIScreen.main.scale
+            let render = UIGraphicsImageRenderer(size: bounds.size, format: format)
+            let image = render.image { context in
+                let ctx = context.cgContext
+                draw(in: ctx)
+            }
+            return image.cgImage
+        } else {
+            UIGraphicsBeginImageContextWithOptions(bounds.size, false, 0)
+            guard let ctx = UIGraphicsGetCurrentContext() else {
                 return nil
             }
-            let s = Float(1.5 * w / (2 * .pi * r))
-            gradientGenerator.scale = gradientImageScale
-            gradientGenerator.size = gradientRect.size
-            gradientGenerator.colors = [endColor, endColor, startColor, startColor]
-            gradientGenerator.locations = [0.0, s, (1.0 - s), 1.0]
-            gradientGenerator.endPoint = CGPoint(x: 0.5 - CGFloat(2 * s), y: 1.0)
-            return gradientGenerator.image()
-        }()
-
-        if p > 0.0 {
-            let arc1Path = UIBezierPath(arcCenter: c,
-                                        radius: r,
-                                        startAngle: -angleOffset,
-                                        endAngle: angle1,
-                                        clockwise: true)
-            if let gradient = gradient {
-                ctx.saveGState()
-
-                ctx.addPath(CGPath(__byStroking: arc1Path.cgPath,
-                                   transform: nil,
-                                   lineWidth: w,
-                                   lineCap: progressStyle.lineCap,
-                                   lineJoin: progressStyle.lineJoin,
-                                   miterLimit: 0)!)
-                ctx.clip()
-
-                ctx.interpolationQuality = .none
-                ctx.draw(gradient, in: gradientRect)
-
-                ctx.restoreGState()
-            } else {
-                ctx.setStrokeColor(startColor)
-                ctx.setLineWidth(w)
-                ctx.setLineCap(progressStyle.lineCap)
-                ctx.addPath(arc1Path.cgPath)
-                ctx.strokePath()
-            }
+            draw(in: ctx)
+            let image = UIGraphicsGetImageFromCurrentImageContext()
+            UIGraphicsEndImageContext()
+            
+            return image?.cgImage
         }
-
-        let img = UIGraphicsGetImageFromCurrentImageContext()?.cgImage
-        UIGraphicsEndImageContext()
-
-        return img
+        
     }
+    
 }
 
 fileprivate extension RingProgressViewStyle {
