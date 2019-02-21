@@ -27,14 +27,14 @@ import UIKit
 @objc(MKRingProgressLayer)
 open class RingProgressLayer: CALayer {
     /// The progress ring start color.
-    @objc open var startColor = UIColor.red.cgColor {
+    @objc open var startColor: CGColor = UIColor.red.cgColor {
         didSet {
             setNeedsDisplay()
         }
     }
 
     /// The progress ring end color.
-    @objc open var endColor = UIColor.blue.cgColor {
+    @objc open var endColor: CGColor = UIColor.blue.cgColor {
         didSet {
             setNeedsDisplay()
         }
@@ -137,7 +137,7 @@ open class RingProgressLayer: CALayer {
         ctx.setShouldAntialias(allowsAntialiasing)
         ctx.setAllowsAntialiasing(allowsAntialiasing)
 
-        let useGradient = startColor !== endColor
+        let useGradient = startColor != endColor
 
         let squareSize = min(bounds.width, bounds.height)
         let squareRect = CGRect(x: (bounds.width - squareSize) / 2, y: (bounds.height - squareSize) / 2,
