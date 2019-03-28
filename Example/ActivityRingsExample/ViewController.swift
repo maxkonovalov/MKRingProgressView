@@ -64,7 +64,7 @@ class ViewController: UIViewController {
     }
     
     @objc func buttonTapped(_ sender: RingProgressGroupButton) {
-        let newIndex = buttons.index(of: sender) ?? 0
+		let newIndex = buttons.firstIndex(of: sender) ?? 0
         if newIndex == selectedIndex {
             return
         }
