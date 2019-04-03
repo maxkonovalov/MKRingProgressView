@@ -13,6 +13,11 @@ class ViewController: UIViewController {
     @IBOutlet var ringProgressView: RingProgressView!
     @IBOutlet var valueLabel: UILabel!
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        ringProgressView.ringWidth = ringProgressView.bounds.width * 0.2
+    }
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if case let parametersViewController as ParametersViewController = segue.destination {
             parametersViewController.delegate = self
