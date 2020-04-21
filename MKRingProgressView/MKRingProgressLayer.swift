@@ -158,8 +158,12 @@ open class RingProgressLayer: CALayer {
         let useGradient = startColor != endColor
         
         let squareSize = min(bounds.width, bounds.height)
-        let squareRect = CGRect(x: (bounds.width - squareSize) / 2, y: (bounds.height - squareSize) / 2,
-                                width: squareSize, height: squareSize)
+        let squareRect = CGRect(
+            x: (bounds.width - squareSize) / 2,
+            y: (bounds.height - squareSize) / 2,
+            width: squareSize,
+            height: squareSize
+        )
         let gradientRect = squareRect.integral
         
         let w = min(ringWidth, squareSize / 2)
@@ -191,11 +195,13 @@ open class RingProgressLayer: CALayer {
         if angle > maxAngle {
             let offset = angle - maxAngle
             
-            let arc2Path = UIBezierPath(arcCenter: c,
-                                        radius: r,
-                                        startAngle: -angleOffset,
-                                        endAngle: offset,
-                                        clockwise: true)
+            let arc2Path = UIBezierPath(
+                arcCenter: c,
+                radius: r,
+                startAngle: -angleOffset,
+                endAngle: offset,
+                clockwise: true
+            )
             context.addPath(arc2Path.cgPath)
             context.setStrokeColor(startColor)
             context.strokePath()
@@ -211,19 +217,27 @@ open class RingProgressLayer: CALayer {
             context.saveGState()
             
             if endShadowOpacity > 0.0 {
-                context.addPath(CGPath(__byStroking: circlePath.cgPath,
-                                       transform: nil,
-                                       lineWidth: w,
-                                       lineCap: .round,
-                                       lineJoin: .round,
-                                       miterLimit: 0)!)
+                context.addPath(
+                    CGPath(
+                        __byStroking: circlePath.cgPath,
+                        transform: nil,
+                        lineWidth: w,
+                        lineCap: .round,
+                        lineJoin: .round,
+                        miterLimit: 0
+                    )!
+                )
                 context.clip()
                 
-                let shadowOffset = CGSize(width: w / 10 * cos(angle + angleOffset),
-                                          height: w / 10 * sin(angle + angleOffset))
-                context.setShadow(offset: shadowOffset,
-                                  blur: w / 3,
-                                  color: UIColor(white: 0.0, alpha: endShadowOpacity).cgColor)
+                let shadowOffset = CGSize(
+                    width: w / 10 * cos(angle + angleOffset),
+                    height: w / 10 * sin(angle + angleOffset)
+                )
+                context.setShadow(
+                    offset: shadowOffset,
+                    blur: w / 3,
+                    color: UIColor(white: 0.0, alpha: endShadowOpacity).cgColor
+                )
             }
             
             let arcEnd = CGPoint(x: c.x + r * cos(angle1), y: c.y + r * sin(angle1))
@@ -231,15 +245,23 @@ open class RingProgressLayer: CALayer {
             let shadowPath: UIBezierPath = {
                 switch progressStyle {
                 case .round:
-                    return UIBezierPath(ovalIn: CGRect(x: arcEnd.x - w / 2,
-                                                       y: arcEnd.y - w / 2,
-                                                       width: w,
-                                                       height: w))
+                    return UIBezierPath(
+                        ovalIn: CGRect(
+                            x: arcEnd.x - w / 2,
+                            y: arcEnd.y - w / 2,
+                            width: w,
+                            height: w
+                        )
+                    )
                 case .square:
-                    let path = UIBezierPath(rect: CGRect(x: arcEnd.x - w / 2,
-                                                         y: arcEnd.y - 2,
-                                                         width: w,
-                                                         height: 2))
+                    let path = UIBezierPath(
+                        rect: CGRect(
+                            x: arcEnd.x - w / 2,
+                            y: arcEnd.y - 2,
+                            width: w,
+                            height: 2
+                        )
+                    )
                     path.apply(CGAffineTransform(translationX: -arcEnd.x, y: -arcEnd.y))
                     path.apply(CGAffineTransform(rotationAngle: angle1))
                     path.apply(CGAffineTransform(translationX: arcEnd.x, y: arcEnd.y))
@@ -278,20 +300,26 @@ open class RingProgressLayer: CALayer {
         }()
         
         if p > 0.0 {
-            let arc1Path = UIBezierPath(arcCenter: c,
-                                        radius: r,
-                                        startAngle: -angleOffset,
-                                        endAngle: angle1,
-                                        clockwise: true)
+            let arc1Path = UIBezierPath(
+                arcCenter: c,
+                radius: r,
+                startAngle: -angleOffset,
+                endAngle: angle1,
+                clockwise: true
+            )
             if let gradient = gradient {
                 context.saveGState()
                 
-                context.addPath(CGPath(__byStroking: arc1Path.cgPath,
-                                       transform: nil,
-                                       lineWidth: w,
-                                       lineCap: progressStyle.lineCap,
-                                       lineJoin: progressStyle.lineJoin,
-                                       miterLimit: 0)!)
+                context.addPath(
+                    CGPath(
+                        __byStroking: arc1Path.cgPath,
+                        transform: nil,
+                        lineWidth: w,
+                        lineCap: progressStyle.lineCap,
+                        lineJoin: progressStyle.lineJoin,
+                        miterLimit: 0
+                    )!
+                )
                 context.clip()
                 
                 context.interpolationQuality = .none
