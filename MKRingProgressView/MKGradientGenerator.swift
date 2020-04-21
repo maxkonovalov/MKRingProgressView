@@ -87,6 +87,11 @@ internal final class GradientGenerator {
 
         let w = Int(size.width * scale)
         let h = Int(size.height * scale)
+        
+        guard w > 0, h > 0 else {
+            return nil
+        }
+        
         let bitsPerComponent: Int = MemoryLayout<UInt8>.size * 8
         let bytesPerPixel: Int = bitsPerComponent * 4 / 8
         

@@ -130,6 +130,9 @@ open class RingProgressLayer: CALayer {
     
     func contentImage() -> CGImage? {
         let size = bounds.size
+        guard size.width > 0, size.height > 0 else {
+            return nil
+        }
         if #available(iOS 10.0, tvOS 10.0, *) {
             let format = UIGraphicsImageRendererFormat.default()
             let image = UIGraphicsImageRenderer(size: size, format: format).image { ctx in
