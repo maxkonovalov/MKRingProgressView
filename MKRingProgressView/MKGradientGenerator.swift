@@ -80,7 +80,7 @@ internal final class GradientGenerator {
         generatedImage = nil
     }
 
-    func image() -> CGImage {
+    func image() -> CGImage? {
         if let image = generatedImage {
             return image
         }
@@ -89,7 +89,10 @@ internal final class GradientGenerator {
         let h = Int(size.height * scale)
         let bitsPerComponent: Int = MemoryLayout<UInt8>.size * 8
         let bytesPerPixel: Int = bitsPerComponent * 4 / 8
-
+        
+        let colorSpace = CGColorSpaceCreateDeviceRGB()
+        let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.premultipliedFirst.rawValue)
+        
         var data = [ARGB]()
 
         for y in 0..<h {
@@ -103,16 +106,28 @@ internal final class GradientGenerator {
                 data.append(c)
             }
         }
-
-        let colorSpace = CGColorSpaceCreateDeviceRGB()
-        let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.premultipliedFirst.rawValue)
-
-        let ctx = CGContext(data: &data, width: w, height: h, bitsPerComponent: bitsPerComponent, bytesPerRow: w * bytesPerPixel, space: colorSpace, bitmapInfo: bitmapInfo.rawValue)!
-        ctx.interpolationQuality = .none
-        ctx.setShouldAntialias(false)
-        let img = ctx.makeImage()!
-        generatedImage = img
-        return img
+        
+        // Fix for #63 - force retain `data` to prevent crash when CGContext uses the buffer
+        let image: CGImage? = withExtendedLifetime(&data) { (data: UnsafeMutableRawPointer) -> CGImage? in
+            guard let ctx = CGContext(
+                data: data,
+                width: w,
+                height: h,
+                bitsPerComponent: bitsPerComponent,
+                bytesPerRow: w * bytesPerPixel,
+                space: colorSpace,
+                bitmapInfo: bitmapInfo.rawValue
+            ) else {
+                return nil
+            }
+            ctx.interpolationQuality = .none
+            ctx.setShouldAntialias(false)
+            
+            return ctx.makeImage()
+        }
+        
+        generatedImage = image
+        return image
     }
 
     private func pixelDataForGradient(at point: CGPoint,
