@@ -112,7 +112,7 @@ open class RingProgressLayer: CALayer {
             if let action = super.action(forKey: "opacity") as? CABasicAnimation {
                 let animation = action.copy() as! CABasicAnimation
                 animation.keyPath = event
-                animation.fromValue = presentation()?.value(forKey: event)
+                animation.fromValue = (presentation() ?? model()).value(forKey: event)
                 animation.toValue = nil
                 return animation
             } else {
