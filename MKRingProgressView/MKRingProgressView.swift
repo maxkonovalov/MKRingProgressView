@@ -34,27 +34,32 @@ public enum RingProgressViewStyle: Int {
 @objc(MKRingProgressView)
 open class RingProgressView: UIView {
     /// The start color of the progress ring.
+    private var _startColor: UIColor?
     @IBInspectable open var startColor: UIColor {
         get {
             return UIColor(cgColor: ringProgressLayer.startColor)
         }
         set {
+            _startColor = newValue
             ringProgressLayer.startColor = newValue.cgColor
         }
     }
 
     /// The end color of the progress ring.
+    private var _endColor: UIColor?
     @IBInspectable open var endColor: UIColor {
         get {
             return UIColor(cgColor: ringProgressLayer.endColor)
         }
         set {
+            _endColor = newValue
             ringProgressLayer.endColor = newValue.cgColor
         }
     }
 
     /// The color of backdrop circle, visible at progress values between 0.0 and 1.0.
     /// If not specified, `startColor` with 15% opacity will be used.
+    private var _backgroundRingColor: UIColor?
     @IBInspectable open var backgroundRingColor: UIColor? {
         get {
             if let color = ringProgressLayer.backgroundRingColor {
@@ -63,6 +68,7 @@ open class RingProgressView: UIView {
             return nil
         }
         set {
+            _backgroundRingColor = newValue
             ringProgressLayer.backgroundRingColor = newValue?.cgColor
         }
     }
@@ -177,6 +183,26 @@ open class RingProgressView: UIView {
     open override func prepareForInterfaceBuilder() {
         super.prepareForInterfaceBuilder()
         ringProgressLayer.disableProgressAnimation = true
+    }
+    
+    open override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        
+        if #available(iOS 13.0, *) {
+            if traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
+                if let startColor = _startColor {
+                    ringProgressLayer.startColor = startColor.cgColor
+                }
+                
+                if let endColor = _endColor {
+                    ringProgressLayer.endColor = endColor.cgColor
+                }
+                
+                if let backgroundRingColor = _backgroundRingColor {
+                    ringProgressLayer.backgroundRingColor = backgroundRingColor.cgColor
+                }
+            }
+        }
     }
 
     // MARK: Accessibility
