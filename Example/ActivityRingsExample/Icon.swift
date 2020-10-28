@@ -11,10 +11,10 @@ import UIKit
 func generateAppIcon(scale: CGFloat = 1.0) -> UIImage {
     let size = CGSize(width: 512, height: 512)
     let rect = CGRect(origin: .zero, size: size)
-
+    
     let icon = UIView(frame: rect)
     icon.backgroundColor = #colorLiteral(red: 0.1176470588, green: 0.1176470588, blue: 0.1254901961, alpha: 1)
-
+    
     let group = RingProgressGroupView(frame: icon.bounds.insetBy(dx: 33, dy: 33))
     group.ringWidth = 50
     group.ringSpacing = 10
@@ -28,11 +28,11 @@ func generateAppIcon(scale: CGFloat = 1.0) -> UIImage {
     group.ring2.progress = 1.0
     group.ring3.progress = 1.0
     icon.addSubview(group)
-
+    
     UIGraphicsBeginImageContextWithOptions(size, true, scale)
     icon.drawHierarchy(in: rect, afterScreenUpdates: true)
     let image = UIGraphicsGetImageFromCurrentImageContext()!
     UIGraphicsEndImageContext()
-
+    
     return image
 }

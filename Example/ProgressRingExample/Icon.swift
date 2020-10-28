@@ -6,8 +6,8 @@
 //  Copyright © 2018 Max Konovalov. All rights reserved.
 //
 
-import UIKit
 import MKRingProgressView
+import UIKit
 
 func generateAppIcon(scale: CGFloat = 1.0) -> UIImage {
     let size = CGSize(width: 512, height: 512)

@@ -9,11 +9,10 @@
 import UIKit
 
 class ViewController: UIViewController {
-
-    @IBOutlet weak var groupContainerView: UIView!
-    @IBOutlet weak var progressGroup: RingProgressGroupView!
+    @IBOutlet var groupContainerView: UIView!
+    @IBOutlet var progressGroup: RingProgressGroupView!
     
-    @IBOutlet weak var iconsHeightConstraint: NSLayoutConstraint!
+    @IBOutlet var iconsHeightConstraint: NSLayoutConstraint!
     
     var buttons = [RingProgressGroupButton]()
     var selectedIndex = 0
@@ -23,14 +22,14 @@ class ViewController: UIViewController {
         
         let containerView = UIView(frame: navigationController!.navigationBar.bounds)
         navigationController!.navigationBar.addSubview(containerView)
-
+        
         // These are optional and only serve to improve accessibility
         progressGroup.ring1.accessibilityLabel = NSLocalizedString("Move", comment: "")
         progressGroup.ring2.accessibilityLabel = NSLocalizedString("Exercise", comment: "")
         progressGroup.ring3.accessibilityLabel = NSLocalizedString("Stand", comment: "")
-
+        
         let n = 7
-        for i in 0..<n {
+        for i in 0 ..< n {
             let w = (containerView.bounds.width - 16) / CGFloat(n)
             let h = containerView.bounds.height
             let button = RingProgressGroupButton(frame: CGRect(x: 8 + CGFloat(i) * w, y: 0, width: w, height: h))
@@ -46,30 +45,29 @@ class ViewController: UIViewController {
             buttons.append(button)
             button.addTarget(self, action: #selector(ViewController.buttonTapped(_:)), for: .touchUpInside)
         }
-
+        
         buttons[0].isSelected = true
-
+        
         updateButtonsProgress()
     }
-
-
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         updateMainGroupProgress(delay: 0.5)
     }
-
+    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         iconsHeightConstraint.constant = progressGroup.ringWidth * 3 + progressGroup.ringSpacing * 2
     }
     
     @objc func buttonTapped(_ sender: RingProgressGroupButton) {
-		let newIndex = buttons.firstIndex(of: sender) ?? 0
+        let newIndex = buttons.firstIndex(of: sender) ?? 0
         if newIndex == selectedIndex {
             return
         }
         
-        let dx = (newIndex > selectedIndex) ? -self.view.frame.width : self.view.frame.width
+        let dx = (newIndex > selectedIndex) ? -view.frame.width : view.frame.width
         
         buttons[selectedIndex].isSelected = false
         sender.isSelected = true
@@ -89,7 +87,7 @@ class ViewController: UIViewController {
             })
         }
     }
-
+    
     private func updateButtonsProgress() {
         UIView.animate(withDuration: 0.5) {
             for button in self.buttons {
@@ -99,7 +97,7 @@ class ViewController: UIViewController {
             }
         }
     }
-
+    
     private func updateMainGroupProgress(delay: TimeInterval = 0.0) {
         let selectedGroup = buttons[selectedIndex]
         UIView.animate(withDuration: 1.0, delay: delay, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.0, options: [], animations: {
@@ -113,5 +111,4 @@ class ViewController: UIViewController {
         updateButtonsProgress()
         updateMainGroupProgress()
     }
-
 }
