@@ -34,36 +34,24 @@ public enum RingProgressViewStyle: Int {
 @objc(MKRingProgressView)
 open class RingProgressView: UIView {
     /// The start color of the progress ring.
-    @IBInspectable open var startColor: UIColor {
-        get {
-            return UIColor(cgColor: ringProgressLayer.startColor)
-        }
-        set {
-            ringProgressLayer.startColor = newValue.cgColor
+    @IBInspectable open var startColor: UIColor = .red {
+        didSet {
+            ringProgressLayer.startColor = startColor.cgColor
         }
     }
 
     /// The end color of the progress ring.
-    @IBInspectable open var endColor: UIColor {
-        get {
-            return UIColor(cgColor: ringProgressLayer.endColor)
-        }
-        set {
-            ringProgressLayer.endColor = newValue.cgColor
+    @IBInspectable open var endColor: UIColor = .blue {
+        didSet {
+            ringProgressLayer.endColor = endColor.cgColor
         }
     }
 
     /// The color of backdrop circle, visible at progress values between 0.0 and 1.0.
     /// If not specified, `startColor` with 15% opacity will be used.
     @IBInspectable open var backgroundRingColor: UIColor? {
-        get {
-            if let color = ringProgressLayer.backgroundRingColor {
-                return UIColor(cgColor: color)
-            }
-            return nil
-        }
-        set {
-            ringProgressLayer.backgroundRingColor = newValue?.cgColor
+        didSet {
+            ringProgressLayer.backgroundRingColor = backgroundRingColor?.cgColor
         }
     }
 
@@ -177,6 +165,18 @@ open class RingProgressView: UIView {
     open override func prepareForInterfaceBuilder() {
         super.prepareForInterfaceBuilder()
         ringProgressLayer.disableProgressAnimation = true
+    }
+    
+    open override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        
+        if #available(iOS 13.0, *) {
+            if traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
+                ringProgressLayer.startColor = startColor.cgColor
+                ringProgressLayer.endColor = endColor.cgColor
+                ringProgressLayer.backgroundRingColor = backgroundRingColor?.cgColor
+            }
+        }
     }
 
     // MARK: Accessibility
