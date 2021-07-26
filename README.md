@@ -78,7 +78,7 @@ To achieve better performance the following options are possible:
 
 ## Requirements
 
-- iOS 8.2
+- iOS 9.0
 - tvOS 9.0
 - Xcode 10, Swift 4+
 
