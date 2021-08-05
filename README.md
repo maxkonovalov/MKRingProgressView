@@ -38,6 +38,16 @@ To install `MKRingProgressView` via [Carthage](https://github.com/Carthage/Carth
 github "maxkonovalov/MKRingProgressView"
 ```
 
+### Swift Package Manager
+
+_Note: Instructions below are for using **SwiftPM** without the Xcode UI. It's the easiest to go to your Project Settings -> Swift Packages and add MKRingProgressView from there._
+
+To integrate using Apple's Swift package manager, without Xcode integration, add the following as a dependency to your `Package.swift`:
+
+```swift
+.package(url: "https://github.com/maxkonovalov/MKRingProgressView.git", .upToNextMajor(from: "2.2.3"))
+```
+
 ## Usage
 
 See the example Xcode project. It contains 2 targets:
