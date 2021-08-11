@@ -1,10 +1,11 @@
 # MKRingProgressView
 
-[![Language](http://img.shields.io/badge/language-swift-brightgreen.svg?style=flat)](https://developer.apple.com/swift)
+[![Language](http://img.shields.io/badge/language-swift-orange.svg?style=flat)](https://developer.apple.com/swift)
 [![Platform](https://img.shields.io/cocoapods/p/MKRingProgressView.svg?style=flat)](http://cocoapods.org/pods/MKRingProgressView)
 [![License](https://img.shields.io/cocoapods/l/MKRingProgressView.svg?style=flat)](http://cocoapods.org/pods/MKRingProgressView)
 [![Version](https://img.shields.io/cocoapods/v/MKRingProgressView.svg?style=flat)](http://cocoapods.org/pods/MKRingProgressView)
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
+[![SPM compatible](https://img.shields.io/badge/Swift_Package_Manager-compatible-brightgreen.svg?style=flat)](https://swift.org/package-manager)
 
 
 Ring progress view similar to Activity app on Apple Watch
@@ -45,7 +46,7 @@ _Note: Instructions below are for using **SwiftPM** without the Xcode UI. It's t
 To integrate using Apple's Swift package manager, without Xcode integration, add the following as a dependency to your `Package.swift`:
 
 ```swift
-.package(url: "https://github.com/maxkonovalov/MKRingProgressView.git", .upToNextMajor(from: "2.2.3"))
+.package(url: "https://github.com/maxkonovalov/MKRingProgressView.git", .upToNextMajor(from: "2.3.0"))
 ```
 
 ## Usage
@@ -90,7 +91,6 @@ To achieve better performance the following options are possible:
 
 - iOS 9.0
 - tvOS 9.0
-- Xcode 10, Swift 4+
 
 ## License
 
