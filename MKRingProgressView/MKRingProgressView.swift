@@ -170,7 +170,7 @@ open class RingProgressView: UIView {
     open override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         
-        if #available(iOS 13.0, *) {
+        if #available(iOS 13.0, tvOS 13.0, *) {
             if traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
                 ringProgressLayer.startColor = startColor.cgColor
                 ringProgressLayer.endColor = endColor.cgColor
