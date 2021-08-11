@@ -9,7 +9,7 @@
 import MKRingProgressView
 import UIKit
 
-protocol ParametersViewControllerDelegate: class {
+protocol ParametersViewControllerDelegate: AnyObject {
     func parametersViewControllerDidChangeProgress(_ progress: Double)
     func parametersViewControllerDidChangeStyle(_ style: RingProgressViewStyle)
     func parametersViewControllerDidChangeShadowOpacity(_ shadowOpacity: CGFloat)
