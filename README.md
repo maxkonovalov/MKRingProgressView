@@ -89,8 +89,8 @@ To achieve better performance the following options are possible:
 
 ## Requirements
 
-- iOS 9.0
-- tvOS 9.0
+- iOS 12.0
+- tvOS 12.0
 
 ## License
 
